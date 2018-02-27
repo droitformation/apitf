@@ -60,7 +60,17 @@ class Table
 
         \DB::connection('mysql')->table($this->mainTable)->whereYear('publication_at', $this->year)->orderBy('id')->chunk(100, function ($decisions) use ($name) {
             foreach ($decisions as $decision) {
-                \DB::connection('sqlite')->table($name)->insert((array) $decision);
+
+                $exist = \DB::connection('sqlite')->table($name)->where("id", $decision->id)->get();
+
+                if($exist->isEmpty()){
+                    // Archive decision
+                    \DB::connection('sqlite')->table($name)->insert((array) $decision);
+                }
+                else{
+                    // Delete from main table
+                    \DB::connection('mysql')->table($this->mainTable)->where("id", $decision->id)->delete();
+                }
             }
         });
     }
@@ -71,6 +81,7 @@ class Table
 
         if($this->countDecisions($this->mainTable,'mysql') == $this->countDecisions($name,'sqlite')){
             \DB::connection('mysql')->table($this->mainTable)->whereYear('publication_at', $this->year)->delete();
+            \Log::info('delete ',$this->year);
         }
     }
 

@@ -42,13 +42,35 @@
                 </div>
             </div>
             <div class="col-lg">
-                <form action="{{ url('date/update') }}" method="POST" class="col-sm text-right">{!! csrf_field() !!}
-                    <div class="form-group">
-                        <label for="newdate">Insérer date</label>
-                        <input type="text" class="form-control datepicker" id="newdate" name="date" placeholder="">
+                <div class="card">
+                    <div class="card-body">
+                        <form action="{{ url('date/update') }}" method="POST">{!! csrf_field() !!}
+                            <div class="form-group">
+                                <label for="newdate">Insérer date</label>
+                                <div class="input-group mb-3">
+                                    <input type="text" class="form-control datepicker" id="newdate" name="date" placeholder="">
+                                    <div class="input-group-prepend">
+                                        <button type="submit" class="btn btn-primary">Envoyer</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
                     </div>
-                    <button type="submit" class="btn btn-primary">Envoyer</button>
-                </form>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <form action="{{ url('date/update') }}" method="POST">{!! csrf_field() !!}
+                            <label for="newdate1">Insérer période</label>
+                            <div class="form-group">
+                                <input type="text" class="form-control datepicker" id="range1" name="range[0]" placeholder="">
+                            </div>
+                            <div class="form-group">
+                                <input type="text" class="form-control datepicker" id="range2" name="range[1]" placeholder="">
+                            </div>
+                            <button type="submit" class="btn btn-info">Envoyer</button>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -59,12 +81,18 @@
                     <div class="col-md">
                         <div class="card" style="width: 18rem;">
                             <div class="card-body">
-                                <h3>Archives {{ $year }}</h3>
-                                @foreach($dates as $date => $count)
-                                    <div class="row">
-                                        <div class="col-sm"><p>{{ $date }}</p></div>
-                                        <div class="col-sm text-right"><p><strong>{{ $count }}</strong></p></div>
-                                    </div>
+                                <h3>Courant {{ $year }}</h3>
+                                @foreach($dates as $month => $days)
+                                    <?php setlocale(LC_ALL, 'fr_FR.UTF-8'); ?>
+                                    <p><strong>{{ strftime("%B",  mktime(0, 0, 0, $month, 10)) }}</strong></p>
+                                    @foreach($days as $day)
+                                        <div class="row list-dates">
+                                            <div class="col-sm">
+                                                <p><a href="{{ url('decisions/'.$day['date']) }}">{{ $day['date'] }}</a></p>
+                                            </div>
+                                            <div class="col-sm text-right"><p><strong>{{ $day['count'] }}</strong></p></div>
+                                        </div>
+                                    @endforeach
                                 @endforeach
                             </div>
                         </div>

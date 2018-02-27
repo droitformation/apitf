@@ -16,5 +16,15 @@
 }
 
 .transfert{
+    margin-bottom: 40px;
+}
 
+.list-dates p{
+    font-size: 13px;
+    margin-bottom: 5px;
+}
+
+.btn-small{
+    padding: 2px 3px;
+    font-size: 10px;
 }

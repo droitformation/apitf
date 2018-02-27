@@ -19,6 +19,14 @@ class ArchiveController extends Controller
         $this->worker = $worker;
     }
 
+    public function index($year, $date ,$id = null)
+    {
+        $decisions = $this->decision->getDateArchive($date,$year);
+        $arret  = $id ? $this->decision->findArchive($id,$year) : null;
+
+        return view('archives')->with(['decisions' => $decisions, 'arret' => $arret, 'date' => $date, 'year' => $year]);
+    }
+
     public function transfert(Request $request)
     {
         $year = $request->input('year');

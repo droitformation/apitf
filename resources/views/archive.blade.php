@@ -3,12 +3,62 @@
 
     <div class="container">
         <div class="row">
+            <div class="col-md-4">
+                <h2>Transfert to archive</h2>
+                <form action="{{ url('archive/transfert') }}" method="POST" class="col-sm text-right transfert">{!! csrf_field() !!}
+                    <?php $currentYear = date('Y') - 1; ?>
+                    <div class="input-group">
+                        <select class="custom-select" name="year">
+                            @foreach(range(2012, $currentYear) as $year)
+                                <option value="{{ $year }}">{{ $year }}</option>
+                            @endforeach
+                        </select>
+                        <div class="input-group-append">
+                            <button class="btn btn-info btn-sm" type="submit">Transfert</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+
+        @if(!$total->isEmpty())
+            @foreach($total as $year => $dates)
+
+                    <div class="card">
+                        <div class="card-body">
+                            <h3>Archives {{ $year }}</h3>
+
+                            <div class="row">
+                                @foreach($dates as $month => $days)
+                                    <div class="col-sm">
+                                        <?php setlocale(LC_ALL, 'fr_FR.UTF-8'); ?>
+                                        <p><strong>{{ strftime("%B",  mktime(0, 0, 0, $month, 10)) }}</strong></p>
+                                        @foreach($days as $day)
+                                            <div class="row list-dates">
+                                                <div class="col-sm">
+                                                    <p><a href="{{ url('archives/'.$year.'/'.$day['date']) }}">{{ $day['date'] }}</a></p>
+                                                </div>
+                                                <div class="col-sm text-right"><p><strong>{{ $day['count'] }}</strong></p></div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                @endforeach
+                            </div>
+
+                        </div>
+                    </div>
+
+            @endforeach
+        @endif
+
+
+        <div class="row">
             <div class="col-md">
-                <h2>Connexion Sqlite</h2>
                 @if(!empty($tables))
                     <div class="card">
                         <div class="card-body">
-                            <h3>Tables</h3>
+                            <h3>Connexion Sqlite Tables</h3>
                             @foreach($tables as $table)
                                 <p>{{ $table->name }}</p>
                             @endforeach
@@ -16,26 +66,8 @@
                     </div>
                 @endif
             </div>
-            <div class="col-md">
-                <h2>Transfert to archive</h2>
-                <form action="{{ url('archive/transfert') }}" method="POST" class="col-sm text-right transfert">{!! csrf_field() !!}
-                    <?php $currentYear = date('Y') - 1; ?>
-                    <div class="row">
-                        <div class="col-md">
-                            <select class="form-control" name="year">
-                                @foreach(range(2012, $currentYear) as $year)
-                                    <option value="{{ $year }}">{{ $year }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-md">
-                            <button class="btn btn-info btn-sm">Transfert</button>
-                        </div>
-                    </div>
-
-                </form>
-
-            </div>
         </div>
+
     </div>
+
 @stop

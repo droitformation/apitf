@@ -14,6 +14,7 @@ class FrontendController extends Controller
     public function __construct(DecisionInterface $decision, DecisionWorkerInterface $worker)
     {
         setlocale(LC_ALL, 'fr_FR.UTF-8');
+        setlocale(LC_ALL, 'fr_FR.UTF-8');
 
         $this->decision = $decision;
         $this->worker = $worker;
@@ -38,7 +39,13 @@ class FrontendController extends Controller
     public function archive()
     {
         $tables = \DB::connection('sqlite')->select("select name from sqlite_master WHERE type='table'");
+        $total  = $this->decision->setConnection('sqlite')->archiveCountByYear();
 
-        return view('archive')->with(['tables' => $tables]);
+        return view('archive')->with(['tables' => $tables, 'total' => $total]);
+    }
+
+    public function decision($id)
+    {
+
     }
 }

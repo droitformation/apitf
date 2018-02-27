@@ -29,6 +29,11 @@ class Decision extends Model
         'publication_at', 'decision_at', 'categorie_id', 'remarque', 'link', 'numero', 'texte', 'langue', 'publish', 'updated'
     ];
 
+    public function getLangAttribute()
+    {
+        return $this->langue == 0 ? 'Français' : 'Allemand';
+    }
+
     public function scopeSearch($query,$terms)
     {
         if($terms && !empty($terms)) {

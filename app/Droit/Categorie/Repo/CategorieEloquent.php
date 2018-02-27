@@ -47,7 +47,7 @@ class CategorieEloquent implements CategorieInterface{
 
         $query .= ' OR soundex(name_de)=soundex("'.$name.'") OR soundex(name_it)=soundex("'.$name.'")';
 
-        $categorie = $this->categorie->whereRaw($query)->get();
+        $categorie = $this->categorie->setConnection('mysql')->whereRaw($query)->get();
 
         return !$categorie->isEmpty() ? $categorie->first() : null;
     }

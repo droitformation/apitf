@@ -21,7 +21,15 @@ class DateController extends Controller
 
     public function update(Request $request)
     {
-        $this->worker->setMissingDates(collect([$request->input('date')]))->update();
+        if($request->input('date',null)){
+            $dates = $request->input('date');
+        }
+
+        if($request->input('range',null)){
+            $dates = generateDateRange(\Carbon\Carbon::parse($request->input('range')[0]), \Carbon\Carbon::parse($request->input('range')[1]));
+        }
+
+        $this->worker->setMissingDates(collect($dates))->update();
 
         return redirect()->back()->with(['message' => 'update']);
     }

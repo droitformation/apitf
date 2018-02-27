@@ -3,6 +3,7 @@
 use  App\Droit\Decision\Repo\DecisionInterface;
 use  App\Droit\Decision\Entities\Decision as M;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class DecisionEloquent implements DecisionInterface{
 
@@ -25,23 +26,53 @@ class DecisionEloquent implements DecisionInterface{
         return $this->decision->take(10)->get();
     }
 
-    public function countByYear(){
+    public function prepareCount($collection){
 
-        return $this->decision->select('id','publication_at')->orderBy('publication_at')->get()->groupBy(function($date) {
+        return $collection->groupBy(function($date) {
             return $date->publication_at->format('Y');
         },'publication_at')->map(function ($year, $key) {
             return $year->groupBy(function($pub) {
                 return $pub->publication_at->format('Y-m-d');
             })->map(function ($date, $key) {
-                return $date->count();
+                return ['date' => $key, 'count' => $date->count()];
+            })->groupBy(function($item, $key) {
+                $month = explode('-',$key);
+                return $month[1];
             });
         });
+    }
 
+    public function countByYear(){
+
+        $collection =  $this->decision->select('id','publication_at')->orderBy('publication_at')->get();
+
+        return $this->prepareCount($collection);
+    }
+
+    public function archiveCountByYear()
+    {
+        $results = collect([]);
+        $year    = date('Y') - 1;
+        $tables  = range('2012',$year);
+
+        foreach ($tables as $table) {
+            if (Schema::connection('sqlite')->hasTable('archive_'.$table)) {
+                $result  = $this->decision->setTable('archive_'.$table)->select('id','publication_at')->orderBy('publication_at')->get();
+                $results = $results->merge($result);
+            }
+        }
+
+        return $this->prepareCount($results);
     }
 
     public function getYear($year){
 
         return $this->decision->whereYear('publication_at', $year)->get();
+    }
+
+    public function getDate($date){
+
+        return $this->decision->where('publication_at', '=', $date)->get();
     }
 
     public function getDates(array $dates)
@@ -66,6 +97,16 @@ class DecisionEloquent implements DecisionInterface{
     public function find($id){
 
         return $this->decision->findOrFail($id);
+    }
+
+    public function findArchive($id,$year){
+
+        return $this->decision->setConnection('sqlite')->setTable('archive_'.$year)->find($id);
+    }
+
+    public function getDateArchive($date,$year){
+
+        return $this->decision->setConnection('sqlite')->setTable('archive_'.$year)->whereDate('publication_at', $date)->get();
     }
 
     public function findByNumeroAndDate($numero,$date){
@@ -139,6 +180,10 @@ class DecisionEloquent implements DecisionInterface{
     }
 
     public function create(array $data){
+
+        $exist = $this->findByNumeroAndDate($data['numero'],$data['publication_at']);
+
+        if($exist){ return false; }
 
         $decision = $this->decision->create(array(
             'id'             => isset($data['id']) ? $data['id'] : null,

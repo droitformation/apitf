@@ -8,6 +8,7 @@
     <title>TF Arrês API</title>
 
     <!-- Fonts -->
+    <script defer src="https://use.fontawesome.com/releases/v5.0.7/js/all.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link href="{{ asset('css/frontend.css') }}" rel="stylesheet">
@@ -24,9 +25,9 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
-                    <li class="nav-item active"><a class="nav-link" href="{{ url('/') }}">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ url('/current') }}">Current</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ url('/archive') }}">Archives</a></li>
+                    <li class="nav-item {{ Request::is('/') ? 'active' : '' }}"><a class="nav-link" href="{{ url('/') }}">Home</a></li>
+                    <li class="nav-item {{ Request::is('current') ? 'active' : '' }}"><a class="nav-link" href="{{ url('/current') }}">Current</a></li>
+                    <li class="nav-item {{ Request::is('archive') ? 'active' : '' }}"><a class="nav-link" href="{{ url('/archive') }}">Archives</a></li>
                 </ul>
             </div>
         </nav>

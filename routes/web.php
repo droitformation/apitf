@@ -11,7 +11,6 @@
 |
 */
 
-
 Route::get('/','FrontendController@index');
 Route::get('/current','FrontendController@current');
 Route::get('/archive','FrontendController@archive');
@@ -21,6 +20,8 @@ Route::post('date/delete','DateController@delete');
 
 Route::post('archive/transfert','ArchiveController@transfert');
 
+Route::get('/decisions/{date}/{id?}','DecisionController@index');
+Route::get('/archives/{year}/{date}/{id?}','ArchiveController@index');
 
 Route::get('arret', function () {
 
@@ -90,11 +91,18 @@ Route::get('decision', 'ArticleController@index');
 
 Route::get('testing', function () {
 
-    $archive = new \App\Droit\Categorie\Entities\ArchiveCategorie();
+/*    $archive = new \App\Droit\Categorie\Entities\ArchiveCategorie();
     $all = $archive->take(50)->get();
 
     echo '<pre>';
     print_r($all->pluck('name'));
+    echo '</pre>';exit();*/
+
+    $repo = App::make('App\Droit\Decision\Repo\DecisionInterface');
+    $all = $repo->setConnection('mysql')->countByYear();
+
+    echo '<pre>';
+    print_r($all);
     echo '</pre>';exit();
 
     /*****************
