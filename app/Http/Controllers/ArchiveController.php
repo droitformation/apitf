@@ -41,6 +41,16 @@ class ArchiveController extends Controller
 
     }
 
+    public function update(Request $request)
+    {
+        $grab     = new \App\Droit\Bger\Utility\Decision();
+        $decision = $grab->setDecision($request->except('year','_token'))->getArret();
+
+        $this->decision->updateArchive(['id' => $request->input('id')] + $decision, $request->input('year'));
+
+        return redirect()->back()->with(['message' => 'Arrêt mis à jour: '.$decision['numero']]);
+    }
+
 }
 
 

@@ -12,13 +12,18 @@
 */
 
 Route::get('/','FrontendController@index');
-Route::get('/current','FrontendController@current');
+Route::match(['get', 'post'], '/current','FrontendController@current');
 Route::get('/archive','FrontendController@archive');
 
 Route::post('date/update','DateController@update');
 Route::post('date/delete','DateController@delete');
 
+Route::post('search','SearchController@search');
+
+Route::post('decision/update','DecisionController@update');
+
 Route::post('archive/transfert','ArchiveController@transfert');
+Route::post('archive/update','ArchiveController@update');
 
 Route::get('/decisions/{date}/{id?}','DecisionController@index');
 Route::get('/archives/{year}/{date}/{id?}','ArchiveController@index');
@@ -98,11 +103,19 @@ Route::get('testing', function () {
     print_r($all->pluck('name'));
     echo '</pre>';exit();*/
 
-    $repo = App::make('App\Droit\Decision\Repo\DecisionInterface');
+/*    $repo = App::make('App\Droit\Decision\Repo\DecisionInterface');
     $all = $repo->setConnection('mysql')->countByYear();
 
     echo '<pre>';
     print_r($all);
+    echo '</pre>';exit();*/
+
+    $data = ['numero' => '2C_1071/2014', 'decision_at' => '2015-05-28','categorie' => 175,'publication_at' => '2015-07-06'];
+    $grab = new \App\Droit\Bger\Utility\Decision();
+    $decision = $grab->setDecision($data)->getArret();
+
+    echo '<pre>';
+    print_r($decision);
     echo '</pre>';exit();
 
     /*****************

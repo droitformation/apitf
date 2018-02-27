@@ -16,8 +16,13 @@
                                        <p><a href="{{ url('archives/'.$year.'/'.$date.'/'.$decision->id) }}">{{ $decision->numero }}</a></p>
                                    </div>
                                    <div class="col-sm text-right">
-                                       <form action="{{ url('date/delete') }}" method="POST" class="">{!! csrf_field() !!}
+                                       <form action="{{ url('archive/update') }}" method="POST" class="">{!! csrf_field() !!}
+                                           <input name="year" value="{{ $year }}" type="hidden">
+                                           <input name="id" value="{{ $decision->id }}" type="hidden">
                                            <input name="numero" value="{{ $decision->numero }}" type="hidden">
+                                           <input name="publication_at" value="{{ $decision->publication_at->format('Y-m-d') }}" type="hidden">
+                                           <input name="decision_at" value="{{ $decision->decision_at->format('Y-m-d') }}" type="hidden">
+                                           <input name="categorie" value="{{ $decision->categorie_id }}" type="hidden">
                                            <button class="btn btn-primary btn-sm btn-small"><i class="fa fa-sync"></i></button>
                                        </form>
                                    </div>

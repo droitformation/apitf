@@ -11,11 +11,12 @@ interface DecisionInterface {
     public function getExistDates(array $dates);
     public function getYear($year);
     public function search($params);
-    public function searchTable($table,$params);
+    public function searchTable($table,$conn,$params);
     public function find($data);
     public function findByNumeroAndDate($numero,$date);
 
     public function findArchive($id,$year);
+    public function updateArchive(array $data, $year);
     public function getDateArchive($date,$year);
     public function archiveCountByYear();
     public function searchArchives($params);

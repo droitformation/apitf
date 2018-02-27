@@ -59,9 +59,11 @@
                     <div class="card">
                         <div class="card-body">
                             <h3>Connexion Sqlite Tables</h3>
+                            <p>
                             @foreach($tables as $table)
-                                <p>{{ $table->name }}</p>
+                                {{ $table->name }},
                             @endforeach
+                            </p>
                         </div>
                     </div>
                 @endif

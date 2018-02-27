@@ -1,7 +1,7 @@
 <?php namespace  App\Droit\Decision\Repo;
 
-use  App\Droit\Decision\Repo\DecisionInterface;
-use  App\Droit\Decision\Entities\Decision as M;
+use App\Droit\Decision\Repo\DecisionInterface;
+use App\Droit\Decision\Entities\Decision as M;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
@@ -106,7 +106,7 @@ class DecisionEloquent implements DecisionInterface{
 
     public function getDateArchive($date,$year){
 
-        return $this->decision->setConnection('sqlite')->setTable('archive_'.$year)->whereDate('publication_at', $date)->get();
+        return $this->decision->setConnection('sqlite')->setTable('archive_'.$year)->whereDate('publication_at', '=', $date)->get();
     }
 
     public function findByNumeroAndDate($numero,$date){
@@ -136,29 +136,50 @@ class DecisionEloquent implements DecisionInterface{
     public function searchArchives($params)
     {
         $results = collect([]);
-        $period  = isset($params['period']) ? $params['period'] : null;
-        $tables  = archiveTableForDates($period[0],$period[1]);
+        $period  = isset($params['period']) && !empty($params['period']) ? $params['period'] : null;
+        $tables  = $period ? archiveTableForDates($period[0],$period[1]) : range(2012,date('Y'));
 
         foreach ($tables as $table) {
             $name    = $table == date('Y') ? 'decisions' : 'archive_'.$table;
-            $result  = $this->searchTable($name,$params);
-            $results = $results->merge($result);
+            $conn    = $table == date('Y') ? 'mysql' : 'sqlite';
+
+            if (Schema::connection($conn)->hasTable($name)) {
+                $result  = $this->searchTable($name,$conn,$params);
+                $results = $results->merge($result);
+            }
         }
 
         return $results;
     }
 
-    public function searchTable($table,$params)
+    public function searchTable($table,$conn,$params)
     {
-        $terms     = isset($params['terms']) && !empty($params['terms']) ? $params['terms'] : null;
-        $published = isset($params['published']) ? $params['published'] : null;
+        $terms     = isset($params['terms']) && !empty($params['terms']) ? prepareTerms($params['terms']) : null;
+        $published = isset($params['published']) && $params['published'] == 1 ? $params['published'] : null;
         $period    = isset($params['period']) ? $params['period'] : null;
 
-        return $this->decision->setTable($table)
-            ->searchfull($terms)
-            ->whereBetween('publication_at', $period)
-            ->published($published)
-            ->get();
+        $model = \DB::connection($conn)->table($table);
+
+        $terms = array_map('addSlashes', $terms->toArray());
+
+        $first = array_shift($terms);
+        $model->where('texte','LIKE',$first);
+
+        if(!empty($terms)){
+            foreach($terms as $term) {
+                $model->orWhere('texte','LIKE',$term);
+            }
+        }
+
+        if($period){
+            $model->whereBetween('publication_at', $period);
+        }
+
+        if($published){
+            $model->where('publish', '=' ,1);
+        }
+
+        return $model->get();
     }
 
     protected function fullTextWildcards($term)
@@ -168,7 +189,7 @@ class DecisionEloquent implements DecisionInterface{
 
     public function searchTableLite($table,$params)
     {
-        $terms     = isset($params['terms']) && !empty($params['terms']) ? $params['terms'] : null;
+        $terms     = isset($params['terms']) && !empty($params['terms']) ? prepareTerms($params['terms']) : null;
         $published = isset($params['published']) ? $params['published'] : null;
         $period    = isset($params['period']) ? $params['period'] : null;
 
@@ -210,10 +231,9 @@ class DecisionEloquent implements DecisionInterface{
 
     }
 
-
     public function update(array $data){
 
-        $decision = $this->decision->findOrFail($data['id']);
+        $decision = $this->decision->setConnection('mysql')->findOrFail($data['id']);
 
         if( ! $decision )
         {
@@ -224,6 +244,11 @@ class DecisionEloquent implements DecisionInterface{
         $decision->save();
 
         return $decision;
+    }
+
+    public function updateArchive(array $data, $year){
+
+        return \DB::connection('sqlite')->table('archive_'.$year)->where('id','=',$data['id'])->update($data);
     }
 
     public function delete($id){

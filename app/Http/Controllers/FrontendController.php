@@ -29,11 +29,19 @@ class FrontendController extends Controller
         return view('welcome')->with(['liste' => $liste, 'exist' => $exist, 'total' => $total]);
     }
 
-    public function current()
+    public function current(Request $request)
     {
         $tables = array_map('reset', \DB::connection('mysql')->select('SHOW TABLES'));
 
-        return view('current')->with(['tables' => $tables]);
+        $results = $request->input('terms',null) ?
+            $this->decision->searchArchives([
+                'period' => array_filter($request->input('period')),
+                'published' => $request->input('published',null),
+                'terms' => $request->input('terms')
+            ]) :
+            collect([]);
+
+        return view('current')->with(['tables' => $tables, 'results' => $results, 'search' => $request->except('_token')]);
     }
 
     public function archive()
@@ -44,8 +52,4 @@ class FrontendController extends Controller
         return view('archive')->with(['tables' => $tables, 'total' => $total]);
     }
 
-    public function decision($id)
-    {
-
-    }
 }

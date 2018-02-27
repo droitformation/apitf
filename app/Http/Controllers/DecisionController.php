@@ -28,8 +28,13 @@ class DecisionController extends Controller
         return view('decisions')->with(['decisions' => $decisions, 'arret' => $arret, 'date' => $date]);
     }
 
-    public function show($id)
+    public function update(Request $request)
     {
+        $grab     = new \App\Droit\Bger\Utility\Decision();
+        $decision = $grab->setDecision($request->except('year','_token'))->getArret();
 
+        $this->decision->update(['id' => $request->input('id')] + $decision);
+
+        return redirect()->back()->with(['message' => 'Arrêt mis à jour: '.$decision['numero']]);
     }
 }
