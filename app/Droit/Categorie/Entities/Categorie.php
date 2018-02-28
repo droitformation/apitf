@@ -4,6 +4,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Categorie extends Model {
 
+    protected $table = 'categories';
 	protected $fillable = ['name','name_de','name_it','parent_id','rang','general'];
     
     public $timestamps  = false;

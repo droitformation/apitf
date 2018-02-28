@@ -17,6 +17,15 @@
                             <div class="form-group">
                                 <input type="text" class="form-control datepicker" id="range2" name="period[1]" placeholder="Fin">
                             </div>
+                            <div class="form-group">
+                                <select class="custom-select" name="categorie_id">
+                                    <option value="">Choix catégorie</option>
+                                    @foreach($categories as $categorie)
+                                        <option value="{{ $categorie->id }}">{{ $categorie->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
                             <div class="form-check">
                                 <input type="checkbox" class="form-check-input" name="published" value="1" id="published">
                                 <label class="form-check-label" for="published">Publié</label>
@@ -31,15 +40,21 @@
                     <div class="card-body">
                         <h3>Résultats</h3>
                         @if(!empty($search))
-                            <p class="lead"><strong>Recherche:</strong>
-                                {{ $search['terms'] }}
+                            <p class="lead">
+                                {!! !empty($search['terms']) ? '<strong>Recherche: </strong>'.$search['terms'] : '' !!}
                                 {{ !empty(array_filter($search['period'])) ? ', de '.$search['period'][0].' à '.$search['period'][1] : '' }}
+                            </p>
+                            <p class="lead">
+                               {!! (isset($search['categorie_id']) && $categories->contains('id',$search['categorie_id'])) ?
+                                   '<strong>Catégorie :</strong> '.$categories->find($search['categorie_id'])->name : '' !!}
                             </p>
                         @endif
                         @if(isset($results) && !$results->isEmpty())
-                            @foreach($results as $result)
-                                <p>{{ \Carbon\Carbon::parse($result->publication_at)->format('Y-m-d') }} | {{ $result->numero }}</p>
-                            @endforeach
+                            <div class="list-dates">
+                                @foreach($results as $result)
+                                    <p>{{ \Carbon\Carbon::parse($result->publication_at)->format('Y-m-d') }} | {{ $result->numero }}</p>
+                                @endforeach
+                            </div>
                         @endif
                     </div>
                 </div>

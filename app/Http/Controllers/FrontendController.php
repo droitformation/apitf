@@ -5,19 +5,22 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Droit\Decision\Repo\DecisionInterface;
 use App\Droit\Decision\Worker\DecisionWorkerInterface;
+use App\Droit\Categorie\Repo\CategorieInterface;
 
 class FrontendController extends Controller
 {
     protected $decision;
     protected $worker;
+    protected $categorie;
 
-    public function __construct(DecisionInterface $decision, DecisionWorkerInterface $worker)
+    public function __construct(DecisionInterface $decision, DecisionWorkerInterface $worker, CategorieInterface $categorie)
     {
         setlocale(LC_ALL, 'fr_FR.UTF-8');
         setlocale(LC_ALL, 'fr_FR.UTF-8');
 
         $this->decision = $decision;
         $this->worker = $worker;
+        $this->categorie = $categorie;
     }
 
     public function index()
@@ -31,17 +34,19 @@ class FrontendController extends Controller
 
     public function current(Request $request)
     {
-        $tables = array_map('reset', \DB::connection('mysql')->select('SHOW TABLES'));
+        $tables     = array_map('reset', \DB::connection('mysql')->select('SHOW TABLES'));
+        $categories = $this->categorie->getAll();
 
-        $results = $request->input('terms',null) ?
+        $results = $request->input('terms',null) || $request->input('categorie_id',null) ?
             $this->decision->searchArchives([
                 'period' => array_filter($request->input('period')),
+                'categorie_id' => $request->input('categorie_id',null),
                 'published' => $request->input('published',null),
                 'terms' => $request->input('terms')
             ]) :
             collect([]);
 
-        return view('current')->with(['tables' => $tables, 'results' => $results, 'search' => $request->except('_token')]);
+        return view('current')->with(['tables' => $tables, 'results' => $results,'categories' => $categories, 'search' => $request->except('_token')]);
     }
 
     public function archive()

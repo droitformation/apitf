@@ -78,12 +78,6 @@ class CategoriesTableSeeder extends Seeder
             array('id' => '235','name' => 'Recours en matière de surveillance','name_de' => 'Zuflucht über die Überwachung','name_it' => 'Ricorso di sorveglianza','parent_id' => '15','rang' => '7','general' => '','global' => NULL),
             array('id' => '244','name' => 'Droit de l\'avocat','name_de' => 'Anwaltsgesetz','name_it' => 'Avvocatura','parent_id' => '19','rang' => '1','general' => '','global' => NULL),
             array('id' => '247','name' => 'Général','name_de' => 'Allgemeine','name_it' => 'Generale','parent_id' => '0','rang' => '0','general' => '','global' => NULL),
-            array('id' => '279','name' => 'Régime allocations et pertes de gain','name_de' => 'Régime allocations et pertes de gain-allemand','name_it' => 'Régime allocations et pertes de gain-italien','parent_id' => '0','rang' => '0','general' => '','global' => NULL),
-            array('id' => '280','name' => '0','name_de' => '0-allemand','name_it' => '0-italien','parent_id' => '0','rang' => '0','general' => '','global' => NULL),
-            array('id' => '281','name' => 'Gesundheitswesen &amp; soziale Sicherheit','name_de' => 'Gesundheitswesen &amp; soziale Sicherheit-allemand','name_it' => 'Gesundheitswesen &amp; soziale Sicherheit-italien','parent_id' => '0','rang' => '0','general' => '','global' => NULL),
-            array('id' => '282','name' => 'Sanità &amp; sicurezza sociale','name_de' => 'Sanità &amp; sicurezza sociale-allemand','name_it' => 'Sanità &amp; sicurezza sociale-italien','parent_id' => '0','rang' => '0','general' => '','global' => NULL),
-            array('id' => '283','name' => 'Santé &amp; sécurité sociale','name_de' => 'Santé &amp; sécurité sociale-allemand','name_it' => 'Santé &amp; sécurité sociale-italien','parent_id' => '0','rang' => '0','general' => '','global' => NULL),
-            array('id' => '284','name' => 'Finances publiques &amp; droit fiscal','name_de' => 'Finances publiques &amp; droit fiscal-allemand','name_it' => 'Finances publiques &amp; droit fiscal-italien','parent_id' => '0','rang' => '0','general' => '','global' => NULL)
         );
 
         \DB::table('categories')->insert($categories);

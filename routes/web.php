@@ -15,6 +15,9 @@ Route::get('/','FrontendController@index');
 Route::match(['get', 'post'], '/current','FrontendController@current');
 Route::get('/archive','FrontendController@archive');
 
+Route::get('/categories','ApiController@categories');
+Route::get('/categorie/{id}','ApiController@categorie');
+
 Route::post('date/update','DateController@update');
 Route::post('date/delete','DateController@delete');
 
@@ -27,6 +30,8 @@ Route::post('archive/update','ArchiveController@update');
 
 Route::get('/decisions/{date}/{id?}','DecisionController@index');
 Route::get('/archives/{year}/{date}/{id?}','ArchiveController@index');
+
+
 
 Route::get('arret', function () {
 

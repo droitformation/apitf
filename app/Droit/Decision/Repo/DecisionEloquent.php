@@ -133,6 +133,28 @@ class DecisionEloquent implements DecisionInterface{
             ->get();
     }
 
+    public function byCategories($categorie_id){
+        $results = collect([]);
+        $tables  = range(2012,date('Y'));
+
+        foreach ($tables as $table) {
+            $name    = $table == date('Y') ? 'decisions' : 'archive_'.$table;
+            $conn    = $table == date('Y') ? 'mysql' : 'sqlite';
+
+            if (Schema::connection($conn)->hasTable($name)) {
+
+                $result = \DB::connection($conn)->table($name)
+                    ->join('categories', $name.'.categorie_id', '=', 'categories.id')
+                    ->select($name.'.id',$name.'.numero',$name.'.categorie_id',$name.'.remarque',$name.'.publication_at',$name.'.decision_at','categories.name')
+                    ->where('categorie_id', '=' ,$categorie_id)
+                    ->get();
+                $results = $results->merge($result);
+            }
+        }
+
+        return $results;
+    }
+
     public function searchArchives($params)
     {
         $results = collect([]);
@@ -154,20 +176,22 @@ class DecisionEloquent implements DecisionInterface{
 
     public function searchTable($table,$conn,$params)
     {
-        $terms     = isset($params['terms']) && !empty($params['terms']) ? prepareTerms($params['terms']) : null;
-        $published = isset($params['published']) && $params['published'] == 1 ? $params['published'] : null;
-        $period    = isset($params['period']) ? $params['period'] : null;
+        $terms        = isset($params['terms']) && !empty($params['terms']) ? prepareTerms($params['terms']) : null;
+        $published    = isset($params['published']) && $params['published'] == 1 ? $params['published'] : null;
+        $period       = isset($params['period']) ? $params['period'] : null;
+        $categorie_id = isset($params['categorie_id']) ? $params['categorie_id'] : null;
 
         $model = \DB::connection($conn)->table($table);
 
-        $terms = array_map('addSlashes', $terms->toArray());
+        if($terms){
+            $terms = array_map('addSlashes', $terms->toArray());
+            $first = array_shift($terms);
+            $model->where('texte','LIKE',$first);
 
-        $first = array_shift($terms);
-        $model->where('texte','LIKE',$first);
-
-        if(!empty($terms)){
-            foreach($terms as $term) {
-                $model->orWhere('texte','LIKE',$term);
+            if(!empty($terms)){
+                foreach($terms as $term) {
+                    $model->orWhere('texte','LIKE',$term);
+                }
             }
         }
 
@@ -177,6 +201,10 @@ class DecisionEloquent implements DecisionInterface{
 
         if($published){
             $model->where('publish', '=' ,1);
+        }
+
+        if($categorie_id){
+            $model->where('categorie_id', '=' ,$categorie_id);
         }
 
         return $model->get();

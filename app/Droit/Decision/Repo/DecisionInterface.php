@@ -15,6 +15,9 @@ interface DecisionInterface {
     public function find($data);
     public function findByNumeroAndDate($numero,$date);
 
+    public function byCategories($categorie_id);
+
+    /* Archives */
     public function findArchive($id,$year);
     public function updateArchive(array $data, $year);
     public function getDateArchive($date,$year);

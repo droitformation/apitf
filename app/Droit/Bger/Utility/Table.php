@@ -34,7 +34,7 @@ class Table
         if (!Schema::connection('sqlite')->hasTable($this->prefix.$this->year)) {
 
             Schema::connection('sqlite')->create($this->prefix.$this->year, function (Blueprint $table) {
-                $table->increments('id');
+                $table->integer('id');
                 $table->string('numero');
                 $table->dateTime('publication_at');
                 $table->dateTime('decision_at');
@@ -66,11 +66,11 @@ class Table
                 if($exist->isEmpty()){
                     // Archive decision
                     \DB::connection('sqlite')->table($name)->insert((array) $decision);
+                    \Log::info('insert');
                 }
-                else{
-                    // Delete from main table
-                    \DB::connection('mysql')->table($this->mainTable)->where("id", $decision->id)->delete();
-                }
+
+                // Delete from main table
+                \DB::connection('mysql')->table($this->mainTable)->where("id", $decision->id)->delete();
             }
         });
     }
