@@ -37,7 +37,7 @@ class FrontendController extends Controller
         $tables     = array_map('reset', \DB::connection('mysql')->select('SHOW TABLES'));
         $categories = $this->categorie->getAll();
 
-        $results = $request->input('terms',null) || $request->input('categorie_id',null) ?
+        $results = $request->input('terms',null) || $request->input('categorie_id',null) || $request->input('period',null) ?
             $this->decision->searchArchives([
                 'period' => array_filter($request->input('period')),
                 'categorie_id' => $request->input('categorie_id',null),

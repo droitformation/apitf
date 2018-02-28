@@ -11,7 +11,7 @@ interface DecisionInterface {
     public function getExistDates(array $dates);
     public function getYear($year);
     public function search($params);
-    public function searchTable($table,$conn,$params);
+    public function searchTable($table,$conn,$params,$year);
     public function find($data);
     public function findByNumeroAndDate($numero,$date);
 

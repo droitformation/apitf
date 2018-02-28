@@ -43,8 +43,43 @@ class ApiController extends Controller
     public function categorie($id)
     {
         $decisions = $this->decision->byCategories($id);
+        $decisions = $decisions->sortBy(function($col)
+        {
+            return \Carbon\Carbon::parse($col->publication_at)->format('ymd');
+        })->reverse();
+        return response()->json($decisions,200);
+    }
+
+    public function decisions()
+    {
+        $decisions = $this->decision->getAll();
 
         return response()->json($decisions,200);
+    }
+
+    public function search(Request $request)
+    {
+        $decisions = $request->input('terms',null) || $request->input('categorie_id',null) || $request->input('period',null) ?
+            $this->decision->searchArchives([
+                'period' => $request->input('period',null),
+                'categorie_id' => $request->input('categorie_id',null),
+                'published' => $request->input('published',null),
+                'terms' => $request->input('terms',null)
+            ]) : collect([]);
+
+        return response()->json($decisions,200);
+    }
+
+    public function decision($id,$year)
+    {
+        if($year == date('Y')){
+            $decision = $this->decision->find($id);
+        }
+        else{
+            $decision = $this->decision->findArchive($id,$year);
+        }
+
+        return response()->json($decision,200);
     }
 }
 

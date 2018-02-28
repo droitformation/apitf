@@ -23,7 +23,7 @@ class DecisionEloquent implements DecisionInterface{
 
     public function getAll()
     {
-        return $this->decision->take(10)->get();
+        return $this->decision->take(20)->get();
     }
 
     public function prepareCount($collection){
@@ -138,16 +138,19 @@ class DecisionEloquent implements DecisionInterface{
         $tables  = range(2012,date('Y'));
 
         foreach ($tables as $table) {
-            $name    = $table == date('Y') ? 'decisions' : 'archive_'.$table;
-            $conn    = $table == date('Y') ? 'mysql' : 'sqlite';
+            $name = $table == date('Y') ? 'decisions' : 'archive_'.$table;
+            $conn = $table == date('Y') ? 'mysql' : 'sqlite';
+            $cast = $table == date('Y') ? 'Year(publication_at) as year' : "strftime('%Y',publication_at) as year";
 
             if (Schema::connection($conn)->hasTable($name)) {
 
                 $result = \DB::connection($conn)->table($name)
-                    ->join('categories', $name.'.categorie_id', '=', 'categories.id')
-                    ->select($name.'.id',$name.'.numero',$name.'.categorie_id',$name.'.remarque',$name.'.publication_at',$name.'.decision_at','categories.name')
-                    ->where('categorie_id', '=' ,$categorie_id)
+                    ->select($name.'.id',$name.'.numero',$name.'.categorie_id',$name.'.remarque',$name.'.publication_at',$name.'.decision_at',$name.'.langue')
+                    ->selectRaw($cast)
+                    ->where($name.'.categorie_id', '=' ,$categorie_id)
+                    ->orderBy('publication_at')
                     ->get();
+
                 $results = $results->merge($result);
             }
         }
@@ -161,12 +164,12 @@ class DecisionEloquent implements DecisionInterface{
         $period  = isset($params['period']) && !empty($params['period']) ? $params['period'] : null;
         $tables  = $period ? archiveTableForDates($period[0],$period[1]) : range(2012,date('Y'));
 
-        foreach ($tables as $table) {
-            $name    = $table == date('Y') ? 'decisions' : 'archive_'.$table;
-            $conn    = $table == date('Y') ? 'mysql' : 'sqlite';
+        foreach ($tables as $year) {
+            $name    = $year == date('Y') ? 'decisions' : 'archive_'.$year;
+            $conn    = $year == date('Y') ? 'mysql' : 'sqlite';
 
             if (Schema::connection($conn)->hasTable($name)) {
-                $result  = $this->searchTable($name,$conn,$params);
+                $result  = $this->searchTable($name,$conn,$params,$year);
                 $results = $results->merge($result);
             }
         }
@@ -174,14 +177,17 @@ class DecisionEloquent implements DecisionInterface{
         return $results;
     }
 
-    public function searchTable($table,$conn,$params)
+    public function searchTable($table,$conn,$params,$year)
     {
         $terms        = isset($params['terms']) && !empty($params['terms']) ? prepareTerms($params['terms']) : null;
         $published    = isset($params['published']) && $params['published'] == 1 ? $params['published'] : null;
         $period       = isset($params['period']) ? $params['period'] : null;
         $categorie_id = isset($params['categorie_id']) ? $params['categorie_id'] : null;
+        $cast         = $year == date('Y') ? 'Year(publication_at) as year' : "strftime('%Y',publication_at) as year";
 
-        $model = \DB::connection($conn)->table($table);
+        $model = \DB::connection($conn)->table($table)
+            ->select($table.'.id',$table.'.numero',$table.'.categorie_id',$table.'.remarque',$table.'.publication_at',$table.'.decision_at',$table.'.langue')
+            ->selectRaw($cast);
 
         if($terms){
             $terms = array_map('addSlashes', $terms->toArray());
