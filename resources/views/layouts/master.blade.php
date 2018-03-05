@@ -28,6 +28,7 @@
                     <li class="nav-item {{ Request::is('/') ? 'active' : '' }}"><a class="nav-link" href="{{ url('/') }}">Home</a></li>
                     <li class="nav-item {{ Request::is('current') ? 'active' : '' }}"><a class="nav-link" href="{{ url('/current') }}">Current</a></li>
                     <li class="nav-item {{ Request::is('archive') ? 'active' : '' }}"><a class="nav-link" href="{{ url('/archive') }}">Archives</a></li>
+                    <li class="nav-item {{ Request::is('abos') ? 'active' : '' }}"><a class="nav-link" href="{{ url('/abos') }}">Users</a></li>
                 </ul>
             </div>
         </nav>

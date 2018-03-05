@@ -78,11 +78,6 @@ class Alert implements AlertInterface
                 // Find decisions for categories published or not
                 $keyword = isset($keyword) && !$keyword->isEmpty() ? array_filter($keyword->toArray()) : null;
 
-/*                $sql =  $this->findDecision($keyword,$categorie_id,$published);
-                echo '<pre>';
-                print_r($sql);
-                echo '</pre>';exit();*/
-
                 return $this->findDecision($keyword,$categorie_id,$published);
             })->reject(function($item){
                 // Reject if no decisions found

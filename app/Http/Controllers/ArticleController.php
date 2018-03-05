@@ -38,4 +38,34 @@ class ArticleController extends Controller
         print_r($results);
         echo '</pre>';exit();
     }
+
+    public function alerte()
+    {
+        $repo = App::make('App\Droit\User\Repo\UserInterface');
+        $user = $repo->find(1);
+
+        $today  =  $publication_at = \Carbon\Carbon::today()->startOfDay();
+        $tomorrow  =  $publication_at = \Carbon\Carbon::today()->startOfDay()->toDateString();
+        /*    */
+        $monday = $today->startOfWeek();
+        $friday = $today->startOfWeek()->parse('this friday');
+
+        $dates = generateDateRange($monday, $friday);
+
+        //$make->multipleAbos($user,$data1);
+
+        $alert  = App::make('App\Droit\Bger\Worker\AlertInterface');
+        $alert->setCadence('daily')->setDate($tomorrow);
+
+        $users = $alert->getUsers();
+
+        /*
+                echo '<pre>';
+                print_r($users);
+                echo '</pre>';exit;*/
+
+        foreach ($users as $users) {
+            echo view('emails.alert')->with(['user' => $users['user'], 'date' => $tomorrow, 'arrets' => $users['abos']]);
+        }
+    }
 }

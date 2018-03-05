@@ -51,6 +51,16 @@ class User extends Authenticatable
         });
     }
 
+    public function getAbosApiAttribute()
+    {
+        return $this->abos->groupBy('categorie_id')->map(function($keywords,$categorie_id){
+            $published    = $this->published->contains('categorie_id',$categorie_id);
+            // Make sure we have en empty collection if no keywords, so the repo has the categorie for searching in new decisions
+            $keyword_list = !$keywords->isEmpty() ? $keywords->pluck('keywords_list')->flatten(1) : collect([]);
+            return ['keywords' => $keyword_list, 'published' => $published];
+        });
+    }
+
     public function abos()
     {
         return $this->hasMany('App\Droit\Abo\Entities\Abo');

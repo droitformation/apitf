@@ -31,6 +31,7 @@ class ApiController extends Controller
             $title = isset($parents[$key]) ? $parents[$key] : 0;
             return [str_slug($title) => [
                 'title' => $title,
+                'id' => $key,
                 'categories' => $items->toArray()
             ]];
         })->toArray();
@@ -43,10 +44,10 @@ class ApiController extends Controller
     public function categorie($id)
     {
         $decisions = $this->decision->byCategories($id);
-        $decisions = $decisions->sortBy(function($col)
-        {
+        $decisions = $decisions->sortBy(function($col) {
             return \Carbon\Carbon::parse($col->publication_at)->format('ymd');
         })->reverse();
+
         return response()->json($decisions,200);
     }
 

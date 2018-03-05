@@ -14,13 +14,15 @@
 Route::get('/','FrontendController@index');
 Route::match(['get', 'post'], '/current','FrontendController@current');
 Route::get('/archive','FrontendController@archive');
+Route::match(['get', 'post'], '/abos','UserController@index');
 
 Route::get('/api/categories','ApiController@categories');
 Route::get('/api/categorie/{id}','ApiController@categorie');
 Route::get('/api/decisions','ApiController@decisions');
 Route::post('/api/search','ApiController@search');
 Route::get('/api/decision/{id}/{year}','ApiController@decision');
-
+Route::post('/api/user','UserController@show');
+Route::post('/api/abo','AboController@abo');
 
 Route::post('date/update','DateController@update');
 Route::post('date/delete','DateController@delete');

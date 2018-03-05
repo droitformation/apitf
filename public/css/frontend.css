@@ -28,3 +28,10 @@
     padding: 2px 3px;
     font-size: 10px;
 }
+
+.cart-inner{
+    padding: 3px;
+    background: #f4f4f4;
+    border: 1px solid #f4f4f4;
+    margin-bottom: 4px;
+}
