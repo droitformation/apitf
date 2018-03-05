@@ -16,6 +16,7 @@ class Table
     public $yearStart = '2012';
     public $year;
     public $mainTable = 'decisions';
+    protected $delete = [];
 
     public function setYear($year)
     {
@@ -69,10 +70,12 @@ class Table
                     \Log::info('insert');
                 }
 
-                // Delete from main table
-                \DB::connection('mysql')->table($this->mainTable)->where("id", $decision->id)->delete();
+                $this->delete[] = $decision->id;
             }
         });
+
+        // Delete after from main table because elese chunl doesn't get all recordss
+        \DB::connection('mysql')->table($this->mainTable)->whereIn("id", $this->delete)->delete();
     }
 
     public function deleteLastYear()
