@@ -24,6 +24,23 @@ class AboEloquent implements AboInterface{
     {
         return $this->abo->with(['abos'])->find($id);
     }
+
+    public function publish($catgorie_id,$user_id){
+
+        $publish = $this->publish->create(array(
+            'user_id'      => $user_id,
+            'categorie_id' => $catgorie_id
+        ));
+    }
+
+    public function unpublish($catgorie_id,$user_id){
+
+        $publish = $this->publish->where('categorie_id','=',$catgorie_id)->where('user_id','=',$user_id)->first();
+
+        if($publish){
+            $publish->delete();
+        }
+    }
     
     public function create(array $data)
     {
@@ -33,16 +50,7 @@ class AboEloquent implements AboInterface{
             'keywords'     => isset($data['keywords']) ? $data['keywords'] : null
         ));
 
-        if(isset($data['publish']) && $data['publish'])
-        {
-            $publish = $this->publish->create(array(
-                'user_id'      => $data['user_id'],
-                'categorie_id' => $data['categorie_id']
-            ));
-        }
-
-        if( ! $abo  )
-        {
+        if( !$abo ) {
             return false;
         }
 
@@ -58,19 +66,6 @@ class AboEloquent implements AboInterface{
             return false;
         }
 
-        $publish = $this->publish->where('user_id','=',$data['user_id'])->where('categorie_id','=',$data['categorie_id'])->get();
-        
-        if(isset($data['publish']) && $data['publish'] && $publish->isEmpty())
-        {
-            $publish = $this->publish->create(array(
-                'user_id'      => $data['user_id'],
-                'categorie_id' => $data['categorie_id']
-            ));
-        }
-        else
-        {
-            $publish->first()->delete();   
-        }
 
         $abo->fill($data);
         $abo->save();

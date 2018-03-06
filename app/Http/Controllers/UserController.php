@@ -3,34 +3,32 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Droit\Decision\Repo\DecisionInterface;
-use App\Droit\Decision\Worker\DecisionWorkerInterface;
+
+use App\Droit\User\Worker\UserWorkerInterface;
 use App\Droit\User\Repo\UserInterface;
 use App\Droit\Categorie\Repo\CategorieInterface;
 use App\Droit\Bger\Worker\AlertInterface;
 
 class UserController extends Controller
 {
-    protected $decision;
     protected $worker;
     protected $user;
     protected $categorie;
     protected $alert;
 
-    public function __construct(DecisionInterface $decision, DecisionWorkerInterface $worker, UserInterface $user, CategorieInterface $categorie, AlertInterface $alert)
+    public function __construct(UserWorkerInterface $worker, UserInterface $user, CategorieInterface $categorie, AlertInterface $alert)
     {
         setlocale(LC_ALL, 'fr_FR.UTF-8');
 
-        $this->decision = $decision;
-        $this->worker = $worker;
-        $this->user = $user;
+        $this->worker    = $worker;
+        $this->user      = $user;
         $this->categorie = $categorie;
-        $this->alert = $alert;
+        $this->alert     = $alert;
     }
 
     public function index(Request $request)
     {
-        $users      =  $this->user->getAll();
+        $users      = $this->user->getAll();
         $categories = $this->categorie->getAll();
 
         if($request->input('user_id')){
@@ -52,10 +50,11 @@ class UserController extends Controller
 
     public function show(Request $request)
     {
-        $user = $this->user->find($request->input('id'));
+        $user = $this->worker->find($request->input('id'), $request->input('data'));
+
         $data = [
-            'id' => $user->id,
-            'cadence' => $user->cadence,
+            'id'          => $user->id,
+            'cadence'     => $user->cadence,
             'abonnements' => $user->abos_api
         ];
 

@@ -71,7 +71,7 @@ class DecisionWorkerTest extends TestCase
         // get list on list
         $this->list->shouldReceive('getList')->once()->andReturn(dates_range(3));
         // repo missing dates
-        $this->repo->shouldReceive('getMissingDates')->once()->andReturn(dates_range(3));
+        $this->repo->shouldReceive('setConnection->getMissingDates')->once()->andReturn(dates_range(3));
         // Special keywords process for each dates
         $this->worker->shouldReceive('process')->times(3);
 
@@ -99,7 +99,7 @@ class DecisionWorkerTest extends TestCase
         $this->list->shouldReceive('getList')->once()->andReturn(dates_range(3));
 
         // repo missing dates
-        $this->repo->shouldReceive('getMissingDates')->once()->andReturn(collect([]));
+        $this->repo->shouldReceive('setConnection->getMissingDates')->once()->andReturn(collect([]));
 
         $worker = new \App\Droit\Decision\Worker\DecisionWorker($this->repo,$this->failed,$this->worker,$this->decision,$this->list);
         $worker->setMissingDates()->update();
@@ -116,7 +116,7 @@ class DecisionWorkerTest extends TestCase
 
         // no need to call getList we passing manually somme dates
         // repo missing dates
-        $this->repo->shouldReceive('getMissingDates')->once()->andReturn($collection_dates);
+        $this->repo->shouldReceive('setConnection->getMissingDates')->once()->andReturn($collection_dates);
 
         // Create a decision worker instance with mocked dependencies
         $worker = new \App\Droit\Decision\Worker\DecisionWorker($this->repo,$this->failed,$this->worker,$this->decision,$this->list);

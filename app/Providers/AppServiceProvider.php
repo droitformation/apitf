@@ -33,6 +33,9 @@ class AppServiceProvider extends ServiceProvider
         $this->registerUserService();
         $this->registerDecisionWorkerService();
         $this->registerAlertWorkerService();
+        $this->registerAboWorkerService();
+        $this->registerUserWorkerService();
+
     }
 
     /**
@@ -170,4 +173,31 @@ class AppServiceProvider extends ServiceProvider
             );
         });
     }
+
+    /**
+     * Abo Worker
+     */
+    protected function registerAboWorkerService(){
+
+        $this->app->singleton('App\Droit\Abo\Worker\AboWorkerInterface', function()
+        {
+            return new \App\Droit\Abo\Worker\AboWorker(
+                \App::make('App\Droit\Abo\Repo\AboInterface')
+            );
+        });
+    }
+
+    /**
+     * User Worker
+     */
+    protected function registerUserWorkerService(){
+
+        $this->app->singleton('App\Droit\User\Worker\UserWorkerInterface', function()
+        {
+            return new \App\Droit\User\Worker\UserWorker(
+                \App::make('App\Droit\User\Repo\UserInterface')
+            );
+        });
+    }
+
 }

@@ -14,6 +14,8 @@ class VerifyCsrfToken extends Middleware
     protected $except = [
         'api/search',
         'api/user',
-        'api/abo'
+        'api/abo/make',
+        'api/abo/remove',
+        'api/abo/cadence',
     ];
 }

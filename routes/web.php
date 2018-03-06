@@ -22,7 +22,9 @@ Route::get('/api/decisions','ApiController@decisions');
 Route::post('/api/search','ApiController@search');
 Route::get('/api/decision/{id}/{year}','ApiController@decision');
 Route::post('/api/user','UserController@show');
-Route::post('/api/abo','AboController@abo');
+Route::post('/api/abo/make','AboController@make');
+Route::post('/api/abo/remove','AboController@remove');
+Route::post('/api/abo/cadence','AboController@cadence');
 
 Route::post('date/update','DateController@update');
 Route::post('date/delete','DateController@delete');
@@ -36,7 +38,6 @@ Route::post('archive/update','ArchiveController@update');
 
 Route::get('/decisions/{date}/{id?}','DecisionController@index');
 Route::get('/archives/{year}/{date}/{id?}','ArchiveController@index');
-
 
 
 Route::get('arret', function () {
