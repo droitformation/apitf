@@ -32,7 +32,7 @@ class AboWorker implements AboWorkerInterface
             $this->abo->create(['user_id' => $data['user_id'], 'categorie_id' => $data['categorie_id'], 'keywords' => null]);
         }
 
-        if(isset($data['publish']) && $data['publish'] == 1){
+        if(isset($data['published']) && $data['published'] == 1){
             $this->abo->publish($data['categorie_id'], $data['user_id']);
         }
 
