@@ -5,6 +5,7 @@ interface DecisionInterface {
     public function getAll();
     public function setConnection($connexion);
     public function countByYear();
+    public function getWeekPublished(array $dates);
     public function getDates(array $dates);
     public function getDate($date);
     public function getMissingDates(array $dates);

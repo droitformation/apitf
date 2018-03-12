@@ -16,7 +16,6 @@ class FrontendController extends Controller
     public function __construct(DecisionInterface $decision, DecisionWorkerInterface $worker, CategorieInterface $categorie)
     {
         setlocale(LC_ALL, 'fr_FR.UTF-8');
-        setlocale(LC_ALL, 'fr_FR.UTF-8');
 
         $this->decision = $decision;
         $this->worker = $worker;
@@ -57,4 +56,18 @@ class FrontendController extends Controller
         return view('archive')->with(['tables' => $tables, 'total' => $total]);
     }
 
+    public function tfnewsletter()
+    {
+        $start = \Carbon\Carbon::now()->startOfWeek();
+        $end   = \Carbon\Carbon::now()->endOfWeek();
+
+        $date = \Carbon\Carbon::now()->formatLocalized("%A %d %B %Y");
+        $week = $start->formatLocalized("%d %B %Y").' au '.$end->formatLocalized("%d %B %Y");
+        $more = '/';
+        $unsuscribe = '/';
+
+        $arrets = $this->decision->getWeekPublished(generateDateRange($start,$end));
+
+        return view('emails.newsletter')->with(['arrets' => $arrets, 'date' => $date, 'week' => $week, 'more' => $more, 'unsuscribe' => $unsuscribe]);
+    }
 }

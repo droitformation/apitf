@@ -16,6 +16,8 @@ Route::match(['get', 'post'], '/current','FrontendController@current');
 Route::get('/archive','FrontendController@archive');
 Route::match(['get', 'post'], '/abos','UserController@index');
 
+Route::get('/tfnewsletter','FrontendController@tfnewsletter');
+
 Route::post('/api/search','ApiController@search');
 
 Route::get('/api/categories','ApiController@categories');
@@ -45,15 +47,19 @@ Route::get('/archives/{year}/{date}/{id?}','ArchiveController@index');
 
 Route::get('arret', function () {
 
-    $archive  = new \App\Droit\Decision\Entities\Archive();
-    $archives = $archive->count();
+    $ipverify = new \App\Droit\Uptime\IP();
 
-    echo '<pre>';
-    print_r($archives);
-    echo '</pre>';exit();
+    return $ipverify->verify('104.130.96.7');
+
+   // $archive  = new \App\Droit\Decision\Entities\Archive();
+   // $archives = $archive->count();
+
+    //echo '<pre>';
+    //print_r($archives);
+    //echo '</pre>';exit();
    # $tables = ['archives_2013','archives_2014','archives_2015','archives_2016','archives_2017'];
 
-    foreach ($tables as $table){
+   // foreach ($tables as $table){
         // set table
         //$archive = $archive->setTable($table);
 
@@ -79,9 +85,9 @@ Route::get('arret', function () {
             }
         });*/
 
-        print_r($table);
-        echo '<br>';
-    }
+      //  print_r($table);
+      //  echo '<br>';
+   // }
 
 });
 

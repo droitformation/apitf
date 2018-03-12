@@ -23,7 +23,13 @@ class DecisionEloquent implements DecisionInterface{
 
     public function getAll()
     {
-        return $this->decision->take(20)->get();
+        $name = 'decisions';
+        $cast = 'Year(publication_at) as year';
+
+        return $this->decision
+            ->select($name.'.id',$name.'.numero',$name.'.categorie_id',$name.'.remarque',$name.'.publication_at',$name.'.decision_at',$name.'.langue')
+            ->selectRaw($cast)
+            ->take(20)->get();
     }
 
     public function prepareCount($collection){
@@ -73,6 +79,11 @@ class DecisionEloquent implements DecisionInterface{
     public function getDate($date){
 
         return $this->decision->where('publication_at', '=', $date)->get();
+    }
+
+    public function getWeekPublished(array $dates){
+
+        return $this->decision->whereIn('publication_at', $dates)->published(true)->get();
     }
 
     public function getDates(array $dates)
