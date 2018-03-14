@@ -1,13 +1,15 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+
 use App\Droit\Decision\Repo\DecisionInterface;
 use App\Droit\Decision\Worker\DecisionWorkerInterface;
 use App\Droit\Categorie\Repo\CategorieInterface;
 
-class ApiController extends Controller
+class MainController extends Controller
 {
     protected $decision;
     protected $worker;

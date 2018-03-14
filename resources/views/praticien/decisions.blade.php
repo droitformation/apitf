@@ -2,7 +2,7 @@
 @section('content')
 
     <div class="container">
-        <p><a href="{{ url('archive') }}" class="btn btn-default btn-sm"><i class="fa fa-arrow-left"></i>Retour</a></p>
+        <p><a href="{{ url('praticien/archive') }}" class="btn btn-default btn-sm"><i class="fa fa-arrow-left"></i>Retour</a></p>
         <div class="row">
 
             <div class="col">
@@ -13,10 +13,10 @@
                             @foreach($decisions as $decision)
                                 <div class="row">
                                     <div class="col-sm">
-                                        <p><a href="{{ url('decision/'.$date.'/'.$decision->id) }}">{{ $decision->numero }}</a></p>
+                                        <p><a href="{{ url('praticien/decision/'.$date.'/'.$decision->id) }}">{{ $decision->numero }}</a></p>
                                     </div>
                                     <div class="col-sm text-right">
-                                        <form action="{{ url('decision/update') }}" method="POST" class="">{!! csrf_field() !!}
+                                        <form action="{{ url('praticien/decision/update') }}" method="POST" class="">{!! csrf_field() !!}
                                             <input name="id" value="{{ $decision->id }}" type="hidden">
                                             <input name="numero" value="{{ $decision->numero }}" type="hidden">
                                             <input name="publication_at" value="{{ $decision->publication_at->format('Y-m-d') }}" type="hidden">

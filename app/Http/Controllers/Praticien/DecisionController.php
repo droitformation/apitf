@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Praticien;
 
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+
 use App\Droit\Decision\Repo\DecisionInterface;
 use App\Droit\Decision\Worker\DecisionWorkerInterface;
 
@@ -25,7 +27,7 @@ class DecisionController extends Controller
         $decisions = $this->decision->setConnection('mysql')->getDate($date);
         $arret  = $id ? $this->decision->setConnection('mysql')->find($id) : null;
 
-        return view('decisions')->with(['decisions' => $decisions, 'arret' => $arret, 'date' => $date]);
+        return view('praticien.decisions')->with(['decisions' => $decisions, 'arret' => $arret, 'date' => $date]);
     }
 
     public function update(Request $request)

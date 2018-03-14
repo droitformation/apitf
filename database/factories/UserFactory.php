@@ -43,6 +43,17 @@ $factory->define(App\Droit\Decision\Entities\Decision::class, function (Faker $f
     ];
 });
 
+$factory->define(App\Droit\Categorie\Entities\Categorie::class, function (Faker $faker) {
+    return [
+        'name'      => 'Ma categorie',
+        'name_de'   => 'Ma categorie all',
+        'name_it'   => 'Ma categorie it',
+        'parent_id' => 0,
+        'rang'      => 0,
+        'general'   => null,
+    ];
+});
+
 $categories = \App\Droit\Categorie\Entities\Categorie::all();
 
 $factory->define(App\Droit\Abo\Entities\Abo::class, function (Faker $faker) use ($categories) {

@@ -19,16 +19,23 @@
     <div class="container">
 
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <a class="navbar-brand" href="#">TF API</a>
+            <a class="navbar-brand" href="{{ url('/') }}">Home Hub</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
-                    <li class="nav-item {{ Request::is('/') ? 'active' : '' }}"><a class="nav-link" href="{{ url('/') }}">Home</a></li>
-                    <li class="nav-item {{ Request::is('current') ? 'active' : '' }}"><a class="nav-link" href="{{ url('/current') }}">Current</a></li>
-                    <li class="nav-item {{ Request::is('archive') ? 'active' : '' }}"><a class="nav-link" href="{{ url('/archive') }}">Archives</a></li>
-                    <li class="nav-item {{ Request::is('abos') ? 'active' : '' }}"><a class="nav-link" href="{{ url('/abos') }}">Users</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            DroitPraticien API TF
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="{{ url('praticien') }}">Année en cours</a>
+                            <a class="dropdown-item" href="{{ url('praticien/testing') }}">Testing</a>
+                            <a class="dropdown-item" href="{{ url('praticien/archive') }}">Archives</a>
+                            <a class="dropdown-item" href="{{ url('praticien/abos') }}">Users</a>
+                        </div>
+                    </li>
                 </ul>
             </div>
         </nav>

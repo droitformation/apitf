@@ -8,10 +8,16 @@ use Illuminate\Support\Facades\Schema;
 class DecisionEloquent implements DecisionInterface{
 
     protected $decision;
+    protected $main_connection = 'mysql';
 
     public function __construct(M $decision)
     {
         $this->decision = $decision;
+
+        if (\App::environment('testing')) {
+            $this->main_connection = 'testing';
+        }
+
     }
 
     public function setConnection($connexion)
@@ -27,9 +33,22 @@ class DecisionEloquent implements DecisionInterface{
         $cast = 'Year(publication_at) as year';
 
         return $this->decision
-            ->select($name.'.id',$name.'.numero',$name.'.categorie_id',$name.'.remarque',$name.'.publication_at',$name.'.decision_at',$name.'.langue')
+            ->select($name.'.id',$name.'.numero',$name.'.categorie_id',$name.'.remarque',$name.'.publication_at',$name.'.decision_at',$name.'.langue',$name.'.publish')
             ->selectRaw($cast)
             ->take(20)->get();
+    }
+
+    public function getest($categorie_id)
+    {
+        $name = 'decisions';
+        $cast = 'Year(publication_at) as year';
+
+        return $this->decision
+            ->select($name.'.id',$name.'.numero',$name.'.categorie_id',$name.'.remarque',$name.'.publication_at',$name.'.decision_at',$name.'.langue',$name.'.publish')
+            ->selectRaw($cast)
+            ->where($name.'.categorie_id', '=' ,$categorie_id)
+            ->orderBy('publication_at')
+            ->get();
     }
 
     public function prepareCount($collection){
@@ -135,7 +154,7 @@ class DecisionEloquent implements DecisionInterface{
         $published = isset($params['published']) ? $params['published'] : null;
         $publication_at = isset($params['publication_at']) ? $params['publication_at'] : null;
 
-        return $this->decision->select('id','numero','categorie_id','remarque','publication_at','decision_at','langue')
+        return $this->decision->select('id','numero','categorie_id','remarque','publication_at','decision_at','langue','publish')
             ->with(['categorie'])
             ->search($terms)
             ->categorie($categorie)
@@ -147,17 +166,17 @@ class DecisionEloquent implements DecisionInterface{
 
     public function byCategories($categorie_id){
         $results = collect([]);
-        $tables  = range(2012,date('Y'));
+        $tables  = array_reverse(range(2012,date('Y')));
 
         foreach ($tables as $table) {
             $name = $table == date('Y') ? 'decisions' : 'archive_'.$table;
-            $conn = $table == date('Y') ? 'mysql' : 'sqlite';
+            $conn = $table == date('Y') ? $this->main_connection : 'sqlite';
             $cast = $table == date('Y') ? 'Year(publication_at) as year' : "strftime('%Y',publication_at) as year";
 
             if (Schema::connection($conn)->hasTable($name)) {
 
                 $result = \DB::connection($conn)->table($name)
-                    ->select($name.'.id',$name.'.numero',$name.'.categorie_id',$name.'.remarque',$name.'.publication_at',$name.'.decision_at',$name.'.langue')
+                    ->select($name.'.id',$name.'.numero',$name.'.categorie_id',$name.'.remarque',$name.'.publication_at',$name.'.decision_at',$name.'.langue',$name.'.publish')
                     ->selectRaw($cast)
                     ->where($name.'.categorie_id', '=' ,$categorie_id)
                     ->orderBy('publication_at')
@@ -178,7 +197,7 @@ class DecisionEloquent implements DecisionInterface{
 
         foreach ($tables as $year) {
             $name    = $year == date('Y') ? 'decisions' : 'archive_'.$year;
-            $conn    = $year == date('Y') ? 'mysql' : 'sqlite';
+            $conn    = $year == date('Y') ? $this->main_connection : 'sqlite';
 
             if (Schema::connection($conn)->hasTable($name)) {
                 $result  = $this->searchTable($name,$conn,$params,$year);
@@ -198,7 +217,7 @@ class DecisionEloquent implements DecisionInterface{
         $cast         = $year == date('Y') ? 'Year(publication_at) as year' : "strftime('%Y',publication_at) as year";
 
         $model = \DB::connection($conn)->table($table)
-            ->select($table.'.id',$table.'.numero',$table.'.categorie_id',$table.'.remarque',$table.'.publication_at',$table.'.decision_at',$table.'.langue')
+            ->select($table.'.id',$table.'.numero',$table.'.categorie_id',$table.'.remarque',$table.'.publication_at',$table.'.decision_at',$table.'.langue',$table.'.publish')
             ->selectRaw($cast);
 
         if($terms){
@@ -279,7 +298,7 @@ class DecisionEloquent implements DecisionInterface{
 
     public function update(array $data){
 
-        $decision = $this->decision->setConnection('mysql')->findOrFail($data['id']);
+        $decision = $this->decision->setConnection($this->main_connection)->findOrFail($data['id']);
 
         if( ! $decision )
         {

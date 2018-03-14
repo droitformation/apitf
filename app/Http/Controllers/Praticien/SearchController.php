@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Praticien;
 
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+
 use App\Droit\Decision\Repo\DecisionInterface;
 use App\Droit\Decision\Worker\DecisionWorkerInterface;
 

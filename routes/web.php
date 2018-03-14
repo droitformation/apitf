@@ -12,44 +12,47 @@
 */
 
 Route::get('/','FrontendController@index');
-Route::match(['get', 'post'], '/current','FrontendController@current');
-Route::get('/archive','FrontendController@archive');
-Route::match(['get', 'post'], '/abos','UserController@index');
 
-Route::get('/tfnewsletter','FrontendController@tfnewsletter');
+Route::group(['prefix' => 'praticien'], function () {
 
-Route::post('/api/search','ApiController@search');
+    Route::get('newsletter','Praticien\NewsletterController@index');
 
-Route::get('/api/categories','ApiController@categories');
-Route::get('/api/categorie/{id}','ApiController@categorie');
+    Route::post('date/update','Praticien\DateController@update');
+    Route::post('date/delete','Praticien\DateController@delete');
 
-Route::get('/api/decisions','ApiController@decisions');
-Route::get('/api/decision/{id}/{year}','ApiController@decision');
+    Route::post('search','Praticien\SearchController@search');
 
-Route::post('/api/user','UserController@show');
-Route::post('/api/abo/make','AboController@make');
-Route::post('/api/abo/remove','AboController@remove');
-Route::post('/api/abo/cadence','AboController@cadence');
+    Route::get('/','Praticien\ArchiveController@index');
+    Route::get('/archive','Praticien\ArchiveController@archive');
+    Route::get('archives/{year}/{date}/{id?}','Praticien\ArchiveController@archives');
 
-Route::post('date/update','DateController@update');
-Route::post('date/delete','DateController@delete');
+    Route::post('transfert','Praticien\ArchiveController@transfert');
+    Route::match(['get', 'post'], 'testing','Praticien\ArchiveController@testing');
+    Route::match(['get', 'post'], 'abos','Praticien\UserController@index');
 
-Route::post('search','SearchController@search');
+    Route::get('decisions/{date}/{id?}','Praticien\DecisionController@index');
+    Route::post('decision/update','Praticien\DecisionController@update');
+});
 
-Route::post('decision/update','DecisionController@update');
 
-Route::post('archive/transfert','ArchiveController@transfert');
-Route::post('archive/update','ArchiveController@update');
+Route::group(['prefix' => 'api'], function () {
+    Route::post('/search','Api\MainController@search');
+    Route::get('/categories','Api\MainController@categories');
+    Route::get('/categorie/{id}','Api\MainController@categorie');
+    Route::get('/decisions','Api\MainController@decisions');
+    Route::get('/decision/{id}/{year}','Api\MainController@decision');
 
-Route::get('/decisions/{date}/{id?}','DecisionController@index');
-Route::get('/archives/{year}/{date}/{id?}','ArchiveController@index');
-
+    Route::post('/user','Api\UserController@show');
+    Route::post('/abo/make','Api\AboController@make');
+    Route::post('/abo/remove','Api\AboController@remove');
+    Route::post('/abo/cadence','Api\AboController@cadence');
+});
 
 Route::get('arret', function () {
 
     $ipverify = new \App\Droit\Uptime\IP();
 
-    return $ipverify->verify('104.130.96.7');
+    return $ipverify->verify('104.130.96.1');
 
    // $archive  = new \App\Droit\Decision\Entities\Archive();
    // $archives = $archive->count();

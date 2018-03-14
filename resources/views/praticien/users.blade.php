@@ -51,7 +51,7 @@
                     <div class="card-body">
 
                         <h3>Tester abo et date</h3>
-                        <form action="{{ url('abos') }}" method="POST" class="mb-2">{!! csrf_field() !!}
+                        <form action="{{ url('praticien/abos') }}" method="POST" class="mb-2">{!! csrf_field() !!}
                             <div class="form-row">
                                 <div class="col">
                                     @if(!$users->isEmpty())

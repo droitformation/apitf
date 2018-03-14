@@ -79,33 +79,6 @@ class AboTest extends TestCase
         ]);
     }
 
-    public function testSetCadence()
-    {
-
-        $user = factory(\App\Droit\User\Entities\User::class)->create([
-            'active_until' => \Carbon\Carbon::today()->startOfDay()->addMonth()->toDateTimeString(),
-            'cadence'      => 'daily',
-        ]);
-
-        $this->assertDatabaseHas('users', [
-            'id'   => $user->id,
-            'cadence' => 'daily',
-        ]);
-
-        $data = [
-            'user_id' => $user->id,
-            'cadence' => 'weekly',
-        ];
-
-        $response = $this->call('POST', 'api/abo/cadence', $data);
-
-        $this->assertDatabaseHas('users', [
-            'id'      => $user->id,
-            'cadence' => 'weekly',
-        ]);
-
-    }
-
     public function testMakeAboUrl()
     {
         $user = factory(\App\Droit\User\Entities\User::class)->create([
@@ -137,5 +110,6 @@ class AboTest extends TestCase
             'keywords'     => 'Lorem ipsum dolor'
         ]);
     }
+
 
 }

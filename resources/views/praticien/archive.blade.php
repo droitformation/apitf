@@ -5,7 +5,7 @@
         <div class="row">
             <div class="col-md-4">
                 <h2>Transfert to archive</h2>
-                <form action="{{ url('archive/transfert') }}" method="POST" class="col-sm text-right transfert">{!! csrf_field() !!}
+                <form action="{{ url('praticien/transfert') }}" method="POST" class="col-sm text-right transfert">{!! csrf_field() !!}
                     <?php $currentYear = date('Y') - 1; ?>
                     <div class="input-group">
                         <select class="custom-select" name="year">

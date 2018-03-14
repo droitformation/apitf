@@ -14,18 +14,13 @@ class UserWorker implements UserWorkerInterface
 
     public function find($id, $data)
     {
-        $user =  $this->user->find($id);
-
-        if(!$user){
-            $user = $this->user->create([
-                'id'    => $data['ID'],
-                'name'     => $data['user_login'],
-                'email'    => $data['user_email'],
-                'cadence'  => 'weekly',
-                'password' => bcrypt($data['user_pass']),
-            ]);
-        }
-
-        return $user;
+         return $this->user->makeOrUpdate([
+            'id'       => $id,
+            'name'     => $data['user_login'],
+            'email'    => $data['user_email'],
+            'active_until' => isset($data['active_until']) ? $data['active_until'] : null,
+            'cadence'  => 'weekly',
+            'password' => bcrypt($data['user_pass']),
+        ]);
     }
 }

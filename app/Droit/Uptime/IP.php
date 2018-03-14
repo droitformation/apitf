@@ -10,31 +10,21 @@ class IP
 
     public function __construct()
     {
-        $this->base_url = 'https://neutrinoapi.com/ip-blocklist';
+        $this->base_url = 'https://cymon.io:443/api/nexus/v1/';
 
         //  Hackery to allow HTTPS
         $this->client = new \GuzzleHttp\Client(['verify' => false]);
     }
 
-    public function getData($params){
+    public function verify($ip){
 
-        $response = $this->client->request('POST',  $this->base_url, [
-            'query' => $params
+        $response = $this->client->request('GET',  $this->base_url.'ip/'.$ip, [
+            'headers' => [
+                'Content-Type'  => 'application/json',
+                'Authorization' => 'Bearer '.env('CYMON_KEY')
+            ]
         ]);
 
-        $data = json_decode($response->getBody(), true);
-
-        return $data;
-    }
-
-    public function verify($ip)
-    {
-        $params = array(
-            "user-id" => env('NEUTRINO_USER_ID'),
-            "api-key" => env('NEUTRINO_API_KEY'),
-            "ip" => $ip
-        );
-
-        return $this->getData($params);
+        return json_decode($response->getBody(), true);
     }
 }

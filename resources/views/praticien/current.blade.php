@@ -6,7 +6,7 @@
             <div class="col-md-4">
                 <div class="card">
                     <div class="card-body">
-                        <form action="{{ url('current') }}" method="POST">{!! csrf_field() !!}
+                        <form action="{{ url('praticien/testing') }}" method="POST">{!! csrf_field() !!}
                             <label for="newdate1">Rechercher période</label>
                             <div class="form-group">
                                 <input type="text" class="form-control" id="terms" name="terms" placeholder="Mots clés">

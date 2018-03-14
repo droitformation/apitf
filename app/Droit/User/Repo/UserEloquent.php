@@ -35,11 +35,12 @@ class UserEloquent implements UserInterface{
         \Log::info(json_encode($data));
 
         $user = $this->user->create(array(
-            'id'         => $data['id'],
-            'name'       => $data['name'],
-            'email'      => $data['email'],
-            'cadence'    => $data['cadence'],
-            'password'   => bcrypt($data['password']),
+            'id'           => $data['id'],
+            'name'         => $data['name'],
+            'email'        => $data['email'],
+            'cadence'      => $data['cadence'],
+            'active_until' => isset($data['active_until']) ? $data['active_until'] : null,
+            'password'     => bcrypt($data['password']),
         ));
 
         if( ! $user ){
@@ -47,6 +48,21 @@ class UserEloquent implements UserInterface{
         }
 
         return $user;
+    }
+
+    public function makeOrUpdate($data)
+    {
+        return $this->user->updateOrCreate(
+            ['id' => $data['id']],
+            [
+                'id'       => $data['id'],
+                'name'     => $data['name'],
+                'email'    => $data['email'],
+                'active_until' => isset($data['active_until']) ? $data['active_until'] : null,
+                'cadence'  => isset($data['cadence']) ? $data['cadence'] : 'weekly',
+                'password' => bcrypt($data['password']),
+            ]
+        );
     }
 
     public function update(array $data){

@@ -58,6 +58,10 @@ class Handler extends ExceptionHandler
             return redirect('/archive')->with(['status' => 'warning', 'message' => $exception->getMessage()]);
         }
 
+        if ($exception instanceof \GuzzleHttp\Exception\ClientException){
+            return response()->json(['status' => 404]);
+        }
+
         return parent::render($request, $exception);
     }
 }

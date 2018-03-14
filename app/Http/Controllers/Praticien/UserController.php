@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Praticien;
 
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 use App\Droit\User\Worker\UserWorkerInterface;
 use App\Droit\User\Repo\UserInterface;
@@ -40,27 +41,13 @@ class UserController extends Controller
             $alert = (new \App\Mail\AlerteDecision($user, $request->input('date'), $data))->render();
         }
 
-        return view('users')->with([
+        return view('praticien.users')->with([
             'users' => $users,
             'user_id' => $request->input('user_id'),
             'categories' => $categories->pluck('name','id'),
             'alert' => isset($alert) ? $alert : null
         ]);
     }
-
-    public function show(Request $request)
-    {
-        $user = $this->worker->find($request->input('id'), $request->input('data'));
-
-        $data = [
-            'id'          => $user->id,
-            'cadence'     => $user->cadence,
-            'abonnements' => $user->abos_api
-        ];
-
-        return response()->json($data);
-    }
-
 }
 
 
