@@ -11,7 +11,8 @@
 |
 */
 
-Route::get('/','FrontendController@index');
+Route::match(['get', 'post'],'/','FrontendController@index');
+
 
 Route::group(['prefix' => 'praticien'], function () {
 
@@ -52,8 +53,8 @@ Route::get('arret', function () {
 
     $ipverify = new \App\Droit\Uptime\IP();
 
-    return $ipverify->verify('104.130.96.1');
-
+    //return $ipverify->verify('104.130.96.1');
+    return $ipverify->verify('104.199.96.85');
    // $archive  = new \App\Droit\Decision\Entities\Archive();
    // $archives = $archive->count();
 

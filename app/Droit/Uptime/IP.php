@@ -18,13 +18,18 @@ class IP
 
     public function verify($ip){
 
-        $response = $this->client->request('GET',  $this->base_url.'ip/'.$ip, [
-            'headers' => [
-                'Content-Type'  => 'application/json',
-                'Authorization' => 'Bearer '.env('CYMON_KEY')
-            ]
-        ]);
+        try{
+            $response = $this->client->request('GET',  $this->base_url.'ip/'.$ip, [
+                'headers' => [
+                    'Content-Type'  => 'application/json',
+                    'Authorization' => 'Bearer '.env('CYMON_KEY')
+                ]
+            ]);
 
-        return json_decode($response->getBody(), true);
+            return json_decode($response->getBody(), true);
+        }
+        catch (\Exception $exception){
+            return [$ip => 'ok'];
+        }
     }
 }

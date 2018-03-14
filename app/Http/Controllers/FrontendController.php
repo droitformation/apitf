@@ -14,8 +14,19 @@ class FrontendController extends Controller
         setlocale(LC_ALL, 'fr_FR.UTF-8');
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        return view('welcome');
+        $results = [];
+
+        if($request->input('verify',null)){
+            $ipverify = new \App\Droit\Uptime\IP();
+            $ips = config('ips');
+            foreach($ips as $ip){
+                $results[] = $ipverify->verify($ip);
+            }
+        }
+
+        return view('welcome')->with(['results' => $results]);
     }
+
 }

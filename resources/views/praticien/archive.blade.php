@@ -29,9 +29,11 @@
                         <div class="card-body">
                             <h3>Archives {{ $year }}</h3>
 
+                            <?php $year = $dates->chunk(6); ?>
+                            @foreach($year as $dates)
                             <div class="row">
                                 @foreach($dates as $month => $days)
-                                    <div class="col-sm">
+                                    <div class="col-md">
                                         <?php setlocale(LC_ALL, 'fr_FR.UTF-8'); ?>
                                         <p><strong>{{ strftime("%B",  mktime(0, 0, 0, $month, 10)) }}</strong></p>
                                         @foreach($days as $day)
@@ -45,7 +47,7 @@
                                     </div>
                                 @endforeach
                             </div>
-
+                            @endforeach
                         </div>
                     </div>
 

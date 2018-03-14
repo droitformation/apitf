@@ -131,12 +131,18 @@ class DecisionEloquent implements DecisionInterface{
 
     public function findArchive($id,$year){
 
-        return $this->decision->setConnection('sqlite')->setTable('archive_'.$year)->find($id);
+        $name = $year == date('Y') ? 'decisions' : 'archive_'.$year;
+        $conn = $year == date('Y') ? $this->main_connection : 'sqlite';
+
+        return $this->decision->setConnection($conn)->setTable($name)->find($id);
     }
 
     public function getDateArchive($date,$year){
 
-        return $this->decision->setConnection('sqlite')->setTable('archive_'.$year)->whereDate('publication_at', '=', $date)->get();
+        $name = $year == date('Y') ? 'decisions' : 'archive_'.$year;
+        $conn = $year == date('Y') ? $this->main_connection : 'sqlite';
+
+        return $this->decision->setConnection($conn)->setTable($name)->whereDate('publication_at', '=', $date)->get();
     }
 
     public function findByNumeroAndDate($numero,$date){
