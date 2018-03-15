@@ -29,7 +29,7 @@ class IP
             return json_decode($response->getBody(), true);
         }
         catch (\Exception $exception){
-            return [$ip => 'ok'];
+            return ['ip' => $ip, 'status' => 'ok'];
         }
     }
 }

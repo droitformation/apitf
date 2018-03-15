@@ -21,8 +21,8 @@ class FrontendController extends Controller
         if($request->input('verify',null)){
             $ipverify = new \App\Droit\Uptime\IP();
             $ips = config('ips');
-            foreach($ips as $ip){
-                $results[] = $ipverify->verify($ip);
+            foreach($ips as $name => $ip){
+                $results[$name] = $ipverify->verify($ip);
             }
         }
 
