@@ -55,7 +55,7 @@ class Handler extends ExceptionHandler
         }
 
         if ($exception instanceof \App\Exceptions\TransfertException){
-            return redirect('/archive')->with(['status' => 'warning', 'message' => $exception->getMessage()]);
+            return redirect('praticien/archive')->with(['status' => 'warning', 'message' => $exception->getMessage()]);
         }
 
         if ($exception instanceof \GuzzleHttp\Exception\ClientException){

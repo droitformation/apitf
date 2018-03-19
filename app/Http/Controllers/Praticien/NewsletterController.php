@@ -35,6 +35,35 @@ class NewsletterController extends Controller
 
         return view('emails.newsletter')->with(['arrets' => $arrets, 'date' => $date, 'week' => $week, 'more' => $more, 'unsuscribe' => $unsuscribe]);
     }
+
+    public function letter(Request $request)
+    {
+        $html = null;
+
+        if($request->input('date', null))
+        {
+            $start = \Carbon\Carbon::createFromFormat('Y-m-d',$request->input('date'))->startOfWeek();
+            $end   = \Carbon\Carbon::createFromFormat('Y-m-d',$request->input('date'))->endOfWeek();
+
+            $date = \Carbon\Carbon::now()->formatLocalized("%A %d %B %Y");
+            $week = $start->formatLocalized("%d %B %Y").' au '.$end->formatLocalized("%d %B %Y");
+            $more = '/';
+            $unsuscribe = '/';
+
+            $arrets = $this->decision->getWeekPublished(generateDateRange($start,$end));
+
+            $html = view('emails.newsletter')->with(['arrets' => $arrets, 'date' => $date, 'week' => $week, 'more' => $more, 'unsuscribe' => $unsuscribe])->render();
+        }
+
+        return view('praticien.letter')->with(['html' => $html]);
+    }
+
+    public function send()
+    {
+        $mailjet = new \App\Droit\Newsletter\NewsletterWorker();
+
+        return $mailjet->send();
+    }
 }
 
 

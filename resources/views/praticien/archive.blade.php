@@ -29,8 +29,8 @@
                         <div class="card-body">
                             <h3>Archives {{ $year }}</h3>
 
-                            <?php $year = $dates->chunk(6); ?>
-                            @foreach($year as $dates)
+                            <?php $years = $dates->chunk(6); ?>
+                            @foreach($years as $dates)
                             <div class="row">
                                 @foreach($dates as $month => $days)
                                     <div class="col-md">
@@ -39,7 +39,7 @@
                                         @foreach($days as $day)
                                             <div class="row list-dates">
                                                 <div class="col-sm">
-                                                    <p><a href="{{ url('archives/'.$year.'/'.$day['date']) }}">{{ $day['date'] }}</a></p>
+                                                    <p><a href="{{ url('praticien/archives/'.$year.'/'.$day['date']) }}">{{ $day['date'] }}</a></p>
                                                 </div>
                                                 <div class="col-sm text-right"><p><strong>{{ $day['count'] }}</strong></p></div>
                                             </div>

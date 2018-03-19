@@ -12,6 +12,7 @@
     <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link href="{{ asset('css/frontend.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/newsletter.css') }}" rel="stylesheet">
     <link href="{{ asset('css/bootstrap-datepicker.css') }}" rel="stylesheet">
 </head>
 <body>
@@ -34,6 +35,7 @@
                             <a class="dropdown-item" href="{{ url('praticien/testing') }}">Testing</a>
                             <a class="dropdown-item" href="{{ url('praticien/archive') }}">Archives</a>
                             <a class="dropdown-item" href="{{ url('praticien/abos') }}">Users</a>
+                            <a class="dropdown-item" href="{{ url('praticien/letter') }}">Newsletter</a>
                         </div>
                     </li>
                 </ul>

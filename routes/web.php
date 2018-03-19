@@ -13,10 +13,11 @@
 
 Route::match(['get', 'post'],'/','FrontendController@index');
 
-
 Route::group(['prefix' => 'praticien'], function () {
 
     Route::get('newsletter','Praticien\NewsletterController@index');
+    Route::match(['get', 'post'], 'letter','Praticien\NewsletterController@letter');
+    Route::get('send','Praticien\NewsletterController@send');
 
     Route::post('date/update','Praticien\DateController@update');
     Route::post('date/delete','Praticien\DateController@delete');
@@ -54,7 +55,11 @@ Route::get('arret', function () {
     $ipverify = new \App\Droit\Uptime\IP();
 
     //return $ipverify->verify('104.130.96.1');
-    return $ipverify->verify('104.199.96.85');
+    $result = $ipverify->logs();
+    echo '<pre>';
+    print_r($result);
+    echo '</pre>';exit();
+
    // $archive  = new \App\Droit\Decision\Entities\Archive();
    // $archives = $archive->count();
 

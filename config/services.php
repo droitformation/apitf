@@ -19,6 +19,11 @@ return [
         'secret' => env('MAILGUN_SECRET'),
     ],
 
+    'mailjet' => [
+        'api' => env('MAILJET_API'),
+        'secret' => env('MAILJET_SECRET'),
+    ],
+
     'ses' => [
         'key' => env('SES_KEY'),
         'secret' => env('SES_SECRET'),

@@ -35,6 +35,7 @@ class DecisionEloquent implements DecisionInterface{
         return $this->decision
             ->select($name.'.id',$name.'.numero',$name.'.categorie_id',$name.'.remarque',$name.'.publication_at',$name.'.decision_at',$name.'.langue',$name.'.publish')
             ->selectRaw($cast)
+            ->orderBy('publication_at','DESCp')
             ->take(20)->get();
     }
 

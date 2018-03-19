@@ -453,3 +453,17 @@ function get_html_split_regex() {
 function _autop_newline_preservation_helper( $matches ) {
     return str_replace( "\n", "<WPPreserveNewline />", $matches[0] );
 }
+
+function secondToHour($seconds) {
+    $dt1 = new DateTime("@0");
+    $dt2 = new DateTime("@$seconds");
+
+    return $dt1->diff($dt2)->format('%a d. %h h %i min.');
+}
+
+function secondToMinutes($seconds) {
+    $dt1 = new DateTime("@0");
+    $dt2 = new DateTime("@$seconds");
+
+    return $dt1->diff($dt2)->format('%i min. %s sec.');
+}

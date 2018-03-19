@@ -16,17 +16,22 @@ class FrontendController extends Controller
 
     public function index(Request $request)
     {
+        $ipverify = new \App\Droit\Uptime\IP();
+
         $results = [];
 
+        $logs = $ipverify->logs();
+
         if($request->input('verify',null)){
-            $ipverify = new \App\Droit\Uptime\IP();
-            $ips = config('ips');
+            $mailgun = $ipverify->mailgun();
+            $ips     = array_merge(config('ips'),['mailgun_main' => $mailgun]);
+
             foreach($ips as $name => $ip){
                 $results[$name] = $ipverify->verify($ip);
             }
         }
 
-        return view('welcome')->with(['results' => $results]);
+        return view('welcome')->with(['results' => $results, 'logs' => $logs]);
     }
 
 }

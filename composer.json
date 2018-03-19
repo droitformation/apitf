@@ -9,11 +9,16 @@
         "fabpot/goutte": "^3.2",
         "fideloper/proxy": "~4.0",
         "guzzlehttp/guzzle": "^6.3",
+        "inlinestyle/inlinestyle": "^1.2",
         "laravel/framework": "5.6.*",
         "laravel/tinker": "~1.0",
-        "neitanod/forceutf8": "^2.0"
+        "mailgun/mailgun-php": "^2.4",
+        "mailjet/mailjet-apiv3-php": "^1.2",
+        "neitanod/forceutf8": "^2.0",
+        "php-http/guzzle6-adapter": "^1.1"
     },
     "require-dev": {
+        "barryvdh/laravel-debugbar": "^3.1",
         "filp/whoops": "~2.0",
         "fzaninotto/faker": "~1.4",
         "mockery/mockery": "~1.0",
