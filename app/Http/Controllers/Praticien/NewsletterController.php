@@ -21,19 +21,22 @@ class NewsletterController extends Controller
         $this->worker = $worker;
     }
 
-    public function index()
+    public function index($date = null)
     {
-        $start = \Carbon\Carbon::now()->startOfWeek();
-        $end   = \Carbon\Carbon::now()->endOfWeek();
+        $date  = $date ? \Carbon\Carbon::parse($date) : \Carbon\Carbon::now();
+        $today = $date->formatLocalized("%A %d %B %Y");
 
-        $date = \Carbon\Carbon::now()->formatLocalized("%A %d %B %Y");
-        $week = $start->formatLocalized("%d %B %Y").' au '.$end->formatLocalized("%d %B %Y");
+        $dates = weekRange($date->toDateString());
+        $start = $dates->first();
+        $end   = $dates->last();
+        $week  = \Carbon\Carbon::parse($start)->formatLocalized("%d %B %Y").' au '.\Carbon\Carbon::parse($end)->formatLocalized("%d %B %Y");
+
         $more = '/';
         $unsuscribe = '/';
 
-        $arrets = $this->decision->getWeekPublished(generateDateRange($start,$end));
+        $arrets = $this->decision->getWeekPublished($dates->toArray());
 
-        return view('emails.newsletter')->with(['arrets' => $arrets, 'date' => $date, 'week' => $week, 'more' => $more, 'unsuscribe' => $unsuscribe]);
+        return view('emails.newsletter')->with(['arrets' => $arrets, 'date' => $today, 'week' => $week, 'more' => $more, 'unsuscribe' => $unsuscribe]);
     }
 
     public function letter(Request $request)
@@ -50,7 +53,7 @@ class NewsletterController extends Controller
             $more = '/';
             $unsuscribe = '/';
 
-            $arrets = $this->decision->getWeekPublished(generateDateRange($start,$end));
+            $arrets = $this->decision->getWeekPublished(weekRange($start,$end));
 
             $html = view('emails.newsletter')->with(['arrets' => $arrets, 'date' => $date, 'week' => $week, 'more' => $more, 'unsuscribe' => $unsuscribe])->render();
         }

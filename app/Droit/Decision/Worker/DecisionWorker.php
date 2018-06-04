@@ -93,9 +93,11 @@ class DecisionWorker implements DecisionWorkerInterface
                 });
 
                 // Attach eventuals categorie for special keywords
-                $this->categorie->process($date);
+                // Live
+                //$this->categorie->process($date);
 
                 \Mail::to('cindy.leschaud@gmail.com')->queue(new \App\Mail\SuccessNotification('Mise à jour des décisions terminées '.$date));
+
             }
         }
     }

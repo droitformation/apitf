@@ -3,22 +3,26 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use App\Jobs\SendEmailAlert;
+use Illuminate\Foundation\Bus\DispatchesJobs;
 
-class SendNewsletter extends Command
+class SendAlertes extends Command
 {
+    use DispatchesJobs;
+
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'send:newsletter {date?}';
+    protected $signature = 'send:alert {cadence}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Send weekly newsletter of arrets for publicationw';
+    protected $description = 'Send alertes for users';
 
     /**
      * Create a new command instance.
@@ -28,6 +32,8 @@ class SendNewsletter extends Command
     public function __construct()
     {
         parent::__construct();
+
+        setlocale(LC_ALL, 'fr_FR.UTF-8');
     }
 
     /**
@@ -37,15 +43,8 @@ class SendNewsletter extends Command
      */
     public function handle()
     {
-        $worker = \App::make('App\Droit\Newsletter\NewsletterWorker');
-        $url    = 'praticien/newsletter';
+        $cadence = $this->argument('cadence');
 
-        $date = $this->argument('date');
-
-        if($date){
-            $url = $url.'/'.$date;
-        }
-
-        $worker->setUrl($url)->send_test();
+        $this->dispatch((new SendEmailAlert(date('Y-m-d'), $cadence)));
     }
 }

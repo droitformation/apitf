@@ -4,21 +4,21 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 
-class SendNewsletter extends Command
+class UpdateArrets extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'send:newsletter {date?}';
+    protected $signature = 'update:arret';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Send weekly newsletter of arrets for publicationw';
+    protected $description = 'Update arrets';
 
     /**
      * Create a new command instance.
@@ -37,15 +37,9 @@ class SendNewsletter extends Command
      */
     public function handle()
     {
-        $worker = \App::make('App\Droit\Newsletter\NewsletterWorker');
-        $url    = 'praticien/newsletter';
+        $worker = \App::make('App\Droit\Decision\Worker\DecisionWorkerInterface');
+        $worker->setMissingDates()->update();
 
-        $date = $this->argument('date');
-
-        if($date){
-            $url = $url.'/'.$date;
-        }
-
-        $worker->setUrl($url)->send_test();
+        \Mail::to('cindy.leschaud@gmail.com')->queue(new \App\Mail\SuccessNotification('Mise à jour des décisions commencé'));
     }
 }

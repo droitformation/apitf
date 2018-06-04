@@ -75,12 +75,15 @@ class MainController extends Controller
 
     public function decision($id,$year)
     {
-        if($year == date('Y')){
+        /*if($year == date('Y')){
             $decision = $this->decision->find($id);
         }
         else{
             $decision = $this->decision->findArchive($id,$year);
-        }
+        }*/
+
+        // For now without archives tables
+        $decision = $this->decision->find($id);
 
         return response()->json($decision,200);
     }

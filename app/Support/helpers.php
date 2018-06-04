@@ -71,6 +71,24 @@ function dates_range($nbr){
     });
 }
 
+function weekRange($start = null){
+
+    $dates = [];
+
+    $end_date = $start ? \Carbon\Carbon::parse($start) : \Carbon\Carbon::today();
+    $end      = $end_date;
+
+    $start_date = $start ? \Carbon\Carbon::parse($start)->subDays(9) : \Carbon\Carbon::today()->subDays(9);
+
+    for($date = $start_date; $date->lte($end); $date->addDay()) {
+        if($date->isWeekday()){
+            $dates[] = $date->toDateTimeString();
+        }
+    }
+
+    return collect($dates);
+}
+
 function generateDateRange($start_date, $end_date)
 {
     $dates = [];

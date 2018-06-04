@@ -75,13 +75,15 @@
         </div>
 
 
-            @if(!$total->isEmpty())
-                @foreach($total as $year => $dates)
+        @if(!$total->isEmpty())
+            @foreach($total as $year => $dates)
 
-                    <div class="card">
-                        <div class="card-body">
-                            <h3>Courant {{ $year }}</h3>
+                <div class="card">
+                    <div class="card-body">
+                        <h3>Archives {{ $year }}</h3>
 
+                        <?php $years = $dates->chunk(6); ?>
+                        @foreach($years as $dates)
                             <div class="row">
                                 @foreach($dates as $month => $days)
                                     <div class="col-md">
@@ -89,22 +91,21 @@
                                         <p><strong>{{ strftime("%B",  mktime(0, 0, 0, $month, 10)) }}</strong></p>
                                         @foreach($days as $day)
                                             <div class="row list-dates">
-                                                <div class="col-sm">
+                                                <div class="col-md-8">
                                                     <p><a href="{{ url('praticien/archives/'.$year.'/'.$day['date']) }}">{{ $day['date'] }}</a></p>
                                                 </div>
-                                                <div class="col-sm text-right"><p><strong>{{ $day['count'] }}</strong></p></div>
+                                                <div class="col-md-4 text-right"><p><strong>{{ $day['count'] }}</strong></p></div>
                                             </div>
                                         @endforeach
                                     </div>
                                 @endforeach
                             </div>
-
-                        </div>
+                        @endforeach
                     </div>
+                </div>
 
-                @endforeach
-            @endif
-
+            @endforeach
+        @endif
 
 
     </div>

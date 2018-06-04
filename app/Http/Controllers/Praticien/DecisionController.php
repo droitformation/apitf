@@ -16,7 +16,6 @@ class DecisionController extends Controller
     public function __construct(DecisionInterface $decision, DecisionWorkerInterface $worker)
     {
         setlocale(LC_ALL, 'fr_FR.UTF-8');
-        setlocale(LC_ALL, 'fr_FR.UTF-8');
 
         $this->decision = $decision;
         $this->worker = $worker;

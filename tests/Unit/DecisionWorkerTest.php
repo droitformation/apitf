@@ -73,7 +73,8 @@ class DecisionWorkerTest extends TestCase
         // repo missing dates
         $this->repo->shouldReceive('setConnection->getMissingDates')->once()->andReturn(dates_range(3));
         // Special keywords process for each dates
-        $this->worker->shouldReceive('process')->times(3);
+        // live
+        //$this->worker->shouldReceive('process')->times(3);
 
         // list set url with date, getListDecisions.
         $this->list->shouldReceive('setUrl')->times(3)->andReturn($this->list);

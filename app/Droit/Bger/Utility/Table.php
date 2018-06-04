@@ -59,7 +59,7 @@ class Table
     {
         $name = $this->getTableName();
 
-        \DB::connection('mysql')->table($this->mainTable)->whereYear('publication_at', $this->year)->orderBy('id')->chunk(100, function ($decisions) use ($name) {
+        \DB::connection('mysql')->table($this->mainTable)->whereYear('publication_at', $this->year)->orderBy('id')->chunk(10, function ($decisions) use ($name) {
             foreach ($decisions as $decision) {
 
                 $exist = \DB::connection('sqlite')->table($name)->where("id", $decision->id)->get();

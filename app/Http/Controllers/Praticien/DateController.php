@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 
 use App\Droit\Decision\Repo\DecisionInterface;
 use App\Droit\Decision\Worker\DecisionWorkerInterface;
+use App\Jobs\ManualUpdateDateDecisions;
 
 class DateController extends Controller
 {
@@ -30,6 +31,8 @@ class DateController extends Controller
         if($request->input('range',null)){
             $dates = generateDateRange(\Carbon\Carbon::parse($request->input('range')[0]), \Carbon\Carbon::parse($request->input('range')[1]));
         }
+
+        //$this->dispatch(new ManualUpdateDateDecisions(collect($dates)));
 
         $this->worker->setMissingDates(collect($dates))->update();
 

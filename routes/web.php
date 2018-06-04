@@ -15,7 +15,7 @@ Route::match(['get', 'post'],'/','FrontendController@index');
 
 Route::group(['prefix' => 'praticien'], function () {
 
-    Route::get('newsletter','Praticien\NewsletterController@index');
+    Route::get('newsletter/{date?}','Praticien\NewsletterController@index');
     Route::match(['get', 'post'], 'letter','Praticien\NewsletterController@letter');
     Route::get('send','Praticien\NewsletterController@send');
 

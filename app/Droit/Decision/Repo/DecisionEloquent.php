@@ -127,7 +127,7 @@ class DecisionEloquent implements DecisionInterface{
 
     public function find($id){
 
-        return $this->decision->findOrFail($id);
+        return $this->decision->find($id);
     }
 
     public function findArchive($id,$year){
@@ -203,8 +203,12 @@ class DecisionEloquent implements DecisionInterface{
         $tables  = $period ? archiveTableForDates($period[0],$period[1]) : range(2012,date('Y'));
 
         foreach ($tables as $year) {
-            $name    = $year == date('Y') ? 'decisions' : 'archive_'.$year;
-            $conn    = $year == date('Y') ? $this->main_connection : 'sqlite';
+            // For live
+            //$name    = $year == date('Y') ? 'decisions' : 'archive_'.$year;
+            //$conn    = $year == date('Y') ? $this->main_connection : 'sqlite';
+            // For dev
+            $name    = 'decisions';
+            $conn    = $this->main_connection;
 
             if (Schema::connection($conn)->hasTable($name)) {
                 $result  = $this->searchTable($name,$conn,$params,$year);
@@ -221,7 +225,11 @@ class DecisionEloquent implements DecisionInterface{
         $published    = isset($params['published']) && $params['published'] == 1 ? $params['published'] : null;
         $period       = isset($params['period']) ? $params['period'] : null;
         $categorie_id = isset($params['categorie_id']) ? $params['categorie_id'] : null;
-        $cast         = $year == date('Y') ? 'Year(publication_at) as year' : "strftime('%Y',publication_at) as year";
+
+        // For live
+        //$cast         = $year == date('Y') ? 'Year(publication_at) as year' : "strftime('%Y',publication_at) as year";
+        // For dev
+        $cast         = 'Year(publication_at) as year';
 
         $model = \DB::connection($conn)->table($table)
             ->select($table.'.id',$table.'.numero',$table.'.categorie_id',$table.'.remarque',$table.'.publication_at',$table.'.decision_at',$table.'.langue',$table.'.publish')

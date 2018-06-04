@@ -15,6 +15,7 @@ class NewsletterWorker
 {
     protected $mailjet;
     protected $main_list = '1793991';
+    protected $url = null;
 
     public function __construct()
     {
@@ -26,12 +27,24 @@ class NewsletterWorker
         );;
     }
 
+    public function setUrl($url)
+    {
+        $this->url = $url;
+
+        return $this;
+    }
+
     /**
      * Put styles inline for campagne
      * Used when sending cammpagne or test
      * */
     public function html()
     {
+        if(!$this->url){
+            throw new \App\Exceptions\ProblemFetchException('Aucune url donnée');
+            die();
+        }
+
         $context = [
             "ssl" => [
                 "verify_peer" => false,
@@ -40,7 +53,7 @@ class NewsletterWorker
         ];
 
         libxml_use_internal_errors(true);
-        $htmldoc = new InlineStyle( file_get_contents( url('praticien/newsletter'), false, stream_context_create($context)));
+        $htmldoc = new InlineStyle( file_get_contents( url($this->url), false, stream_context_create($context)));
 
         $htmldoc->applyStylesheet($htmldoc->extractStylesheets());
 
@@ -60,8 +73,14 @@ class NewsletterWorker
         $this->mailjet->setHtml($html,$ID);
         $this->mailjet->sendTest($ID,'cindy.leschaud@gmail.com','Newsletter Droit pour le Praticien | Semaine du 4 janvier au 15 janvier 2018');
         $this->mailjet->sendCampagne($ID);
-
-
     }
 
+    public function send_test()
+    {
+        $html = $this->html();
+
+        \Mail::send([], [], function ($message) use ($html) {
+            $message->to('cindy.leschaud@gmail.com')->subject('Newsletter Droit pour le Praticien | TEST')->setBody($html, 'text/html');
+        });
+    }
 }
