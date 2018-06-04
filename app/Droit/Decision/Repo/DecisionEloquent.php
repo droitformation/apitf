@@ -204,11 +204,11 @@ class DecisionEloquent implements DecisionInterface{
 
         foreach ($tables as $year) {
             // For live
-            //$name    = $year == date('Y') ? 'decisions' : 'archive_'.$year;
-            //$conn    = $year == date('Y') ? $this->main_connection : 'sqlite';
+            $name    = $year == date('Y') ? 'decisions' : 'archive_'.$year;
+            $conn    = $year == date('Y') ? $this->main_connection : 'sqlite';
             // For dev
-            $name    = 'decisions';
-            $conn    = $this->main_connection;
+           // $name    = 'decisions';
+            //$conn    = $this->main_connection;
 
             if (Schema::connection($conn)->hasTable($name)) {
                 $result  = $this->searchTable($name,$conn,$params,$year);
@@ -227,9 +227,9 @@ class DecisionEloquent implements DecisionInterface{
         $categorie_id = isset($params['categorie_id']) ? $params['categorie_id'] : null;
 
         // For live
-        //$cast         = $year == date('Y') ? 'Year(publication_at) as year' : "strftime('%Y',publication_at) as year";
+        $cast         = $year == date('Y') ? 'Year(publication_at) as year' : "strftime('%Y',publication_at) as year";
         // For dev
-        $cast         = 'Year(publication_at) as year';
+        //$cast         = 'Year(publication_at) as year';
 
         $model = \DB::connection($conn)->table($table)
             ->select($table.'.id',$table.'.numero',$table.'.categorie_id',$table.'.remarque',$table.'.publication_at',$table.'.decision_at',$table.'.langue',$table.'.publish')
