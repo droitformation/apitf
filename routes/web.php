@@ -52,13 +52,18 @@ Route::group(['prefix' => 'api'], function () {
 
 Route::get('arret', function () {
 
-    $ipverify = new \App\Droit\Uptime\IP();
+    $transfert = new App\Droit\Transfert\Transfert();
+    $arrets = $transfert->arrets();
 
-    //return $ipverify->verify('104.130.96.1');
+    echo '<pre>';
+    print_r($arrets);
+    echo '</pre>';exit();
+
+/*    $ipverify = new \App\Droit\Uptime\IP();
     $result = $ipverify->logs();
     echo '<pre>';
     print_r($result);
-    echo '</pre>';exit();
+    echo '</pre>';exit();*/
 
    // $archive  = new \App\Droit\Decision\Entities\Archive();
    // $archives = $archive->count();
