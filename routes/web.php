@@ -53,7 +53,7 @@ Route::group(['prefix' => 'api'], function () {
 Route::get('arret', function () {
 
     $transfert = new App\Droit\Transfert\Transfert();
-    $arrets = $transfert->arrets();
+    $arrets = $transfert->getOld('Categorie');
 
     echo '<pre>';
     print_r($arrets);

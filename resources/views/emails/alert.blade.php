@@ -321,7 +321,13 @@
                                                                                 <tr align="left" style="font-size: 12px;">
                                                                                     <td style="padding: 5px 2px;">{{ $decisison->decision_at->formatLocalized('%d %B %Y') }}</td>
                                                                                     <td style="padding: 5px 4px 5px 2px;">{{ isset($decisison->categorie) ? $decisison->categorie->name : '' }}</td>
-                                                                                    <td style="padding: 5px 2px;"><strong><a href="">{{ $decisison->numero }}</a></strong></td>
+                                                                                    <td style="padding: 5px 2px;">
+                                                                                        <strong>
+                                                                                            <a href="http://www.droitpourlepraticien.ch/?page_id=30526&arret={{ $decisison->id }}&year={{ $decisison->publication_at->year }}">
+                                                                                                {{ $decisison->numero }}
+                                                                                            </a>
+                                                                                        </strong>
+                                                                                    </td>
                                                                                     <td style="padding: 5px 2px;">
                                                                                         @if( isset($arret['keywords']) && !empty($arret['keywords']))
                                                                                             {{ implode(', ',$arret['keywords']) }}
