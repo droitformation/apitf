@@ -323,7 +323,7 @@
                                                                                     <td style="padding: 5px 4px 5px 2px;">{{ isset($decisison->categorie) ? $decisison->categorie->name : '' }}</td>
                                                                                     <td style="padding: 5px 2px;">
                                                                                         <strong>
-                                                                                            <a href="http://www.droitpourlepraticien.ch/?page_id=30526&arret={{ $decisison->id }}&year={{ $decisison->publication_at->year }}">
+                                                                                            <a target="_blank" href="http://www.droitpourlepraticien.ch/?page_id=30526&arret={{ $decisison->id }}&year={{ $decisison->publication_at->year }}">
                                                                                                 {{ $decisison->numero }}
                                                                                             </a>
                                                                                         </strong>
