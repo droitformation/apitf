@@ -50,6 +50,18 @@ Route::group(['prefix' => 'api'], function () {
     Route::post('/abo/cadence','Api\AboController@cadence');
 });
 
+Route::get('alert', function () {
+
+    $repo  = \App::make('App\Droit\User\Repo\UserInterface');
+    $alert = \App::make('App\Droit\Bger\Worker\AlertInterface');
+    $user  = $repo->find(1422);
+
+    $alert->setCadence('weekly')->setDate(weekRange('2018-05-31')->toArray());
+    $abos = $alert->getUserAbos($user);
+
+    return new \App\Mail\AlerteDecision($user, weekRange('2018-05-31')->toArray(), $abos);
+});
+
 Route::get('arret', function () {
 
     $transfert = new App\Droit\Transfert\Transfert();

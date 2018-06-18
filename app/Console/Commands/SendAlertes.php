@@ -15,7 +15,7 @@ class SendAlertes extends Command
      *
      * @var string
      */
-    protected $signature = 'send:alert {cadence}';
+    protected $signature = 'send:alert {cadence} {date?}';
 
     /**
      * The console command description.
@@ -44,7 +44,13 @@ class SendAlertes extends Command
     public function handle()
     {
         $cadence = $this->argument('cadence');
+        $date    = $this->argument('date');
+        $date    = $date ? $date : date('Y-m-d');
 
-        $this->dispatch((new SendEmailAlert(date('Y-m-d'), $cadence)));
+        if($cadence == 'weekly'){
+            $date = weekRange($date)->toArray();
+        }
+
+        $this->dispatch((new SendEmailAlert($date, $cadence)));
     }
 }

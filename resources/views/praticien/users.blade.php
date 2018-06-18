@@ -71,7 +71,9 @@
                             </div>
                         </form>
 
-                        {!! $alert or '' !!}
+                        <div style="border: 1px solid #ccc; width: 610px;margin: 0 auto;">
+                            {!! $alert or '' !!}
+                        </div>
                     </div>
                 </div>
             </div>

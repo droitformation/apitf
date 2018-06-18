@@ -37,6 +37,7 @@ class SendEmailAlert implements ShouldQueue
     {
         $alert = \App::make('App\Droit\Bger\Worker\AlertInterface');
         $alert->setCadence($this->cadence)->setDate($this->publication_at);
+
         $users = $alert->getUsers();
 
         // No alerts today

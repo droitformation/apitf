@@ -46,9 +46,9 @@ class MainController extends Controller
     public function categorie($id)
     {
         $decisions = $this->decision->byCategories($id);
-        $decisions = $decisions->sortBy(function($col) {
-            return \Carbon\Carbon::parse($col->publication_at)->format('ymd');
-        })->reverse();
+        $decisions = $decisions->sortByDesc(function($col,$key) {
+            return $col->publication_at;
+        });
 
         return response()->json($decisions,200);
     }
