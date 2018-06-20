@@ -64,11 +64,24 @@ Route::get('alert', function () {
 
 Route::get('arret', function () {
 
+    $data = [
+        'nom'    => 'Cindy',
+        'url'    => 'http://designpond.ch',
+        'logo'   => 'cindy.png',
+        'slug'   => 'cindy',
+        'prefix' => 'cindy',
+    ];
+
     $transfert = new App\Droit\Transfert\Transfert();
-    $arrets = $transfert->getOld('Categorie');
+    $arrets    = $transfert->makeSite($data)->prepare();
+
+/*    $model = $transfert->getOld('Analyse');
+
+    $relations = $model->first()->categories->pluck('id')->all();
+    $ids = array_intersect_key([63 => 12, 13 => 24], array_flip($relations));
 
     echo '<pre>';
-    print_r($arrets);
+    print_r($ids);*/
     echo '</pre>';exit();
 
 /*    $ipverify = new \App\Droit\Uptime\IP();
