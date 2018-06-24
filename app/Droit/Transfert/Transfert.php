@@ -100,31 +100,6 @@ class Transfert
         }
     }
 
-    public function makeCategories()
-    {
-        $old = $this->getOld('Categorie');
-
-        // Get all
-        $old_models = $old->get();
-        // Loop
-        // Set site_id and site slug
-        foreach ($old_models as $model){
-            $new = $this->makeNew('Categorie');
-            $new->fill(array_except($model->toArray(),['id','pid','user_id','deleted','parent_id']));
-            $new->site_id = $this->site->id;
-            $new->image   = $this->site->slug.'/'.$model->image;
-            $new->old_id  = $model->id;
-            echo '<pre>';
-            print_r($new->toArray());
-            echo '</pre>';
-            $new->save();
-        }
-        // copy old make new
-        // put in conversion table
-
-        //return $this;
-    }
-
     public function getOld($model)
     {
         $old = $this->getModel($model);

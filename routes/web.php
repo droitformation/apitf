@@ -64,12 +64,14 @@ Route::get('alert', function () {
 
 Route::get('arret', function () {
 
+    $faker = \Faker\Factory::create();
+
     $data = [
-        'nom'    => 'Cindy',
-        'url'    => 'http://designpond.ch',
-        'logo'   => 'cindy.png',
-        'slug'   => 'cindy',
-        'prefix' => 'cindy',
+        'nom'    => $faker->word,
+        'url'    => $faker->url,
+        'logo'   => $faker->word,
+        'slug'   => $faker->word,
+        'prefix' => $faker->word
     ];
 
     $transfert = new App\Droit\Transfert\Transfert();
