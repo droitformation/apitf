@@ -75,7 +75,16 @@ Route::get('arret', function () {
     ];
 
     $transfert = new App\Droit\Transfert\Transfert();
-    $arrets    = $transfert->makeSite($data)->prepare();
+
+    $model = $transfert->getOld('Newsletter');
+    $model = $model->first();
+
+    $transfert->makeSite($data)->prepare();
+    $transfert->makeNewsletter($model)->makeCampagne();
+
+    echo '<pre>';
+    print_r($model);
+    echo '</pre>';exit();
 
 /*    $model = $transfert->getOld('Analyse');
 

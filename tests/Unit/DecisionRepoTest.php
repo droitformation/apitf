@@ -213,9 +213,9 @@ class DecisionRepoTest extends TestCase
         $this->assertTrue($decision4->other_categories->contains('id',207));
     }
 
-    public function testOtherCategorieForDecisionNotFound()
+    /*public function testOtherCategorieForDecisionNotFound()
     {
-        /*$date = \Carbon\Carbon::today()->startOfDay()->toDateTimeString();
+        $date = \Carbon\Carbon::today()->startOfDay()->toDateTimeString();
 
         // Control
         $decision1 = factory(\App\Droit\Decision\Entities\Decision::class)->create([
@@ -230,6 +230,6 @@ class DecisionRepoTest extends TestCase
         $decision1->fresh();
 
         $this->assertFalse($decision1->other_categories->contains('id',244));
-        $this->assertFalse($decision1->other_categories->contains('id',207));*/
-    }
+        $this->assertFalse($decision1->other_categories->contains('id',207));
+    }*/
 }

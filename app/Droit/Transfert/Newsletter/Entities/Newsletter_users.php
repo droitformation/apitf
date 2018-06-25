@@ -9,9 +9,11 @@ class Newsletter_users extends Model {
 
     protected $dates    = ['activated_at','deleted_at'];
 	protected $fillable = ['email','activation_token','activated_at'];
+    protected $connection = 'transfert';
 
     public function subscriptions()
     {
-        return $this->belongsToMany('App\Droit\Transfert\Newsletter\Entities\Newsletter', 'newsletter_subscriptions', 'user_id', 'newsletter_id');
+        $database = $this->getConnection()->getDatabaseName();
+        return $this->belongsToMany('App\Droit\Transfert\Newsletter\Entities\Newsletter', $database.'.newsletter_subscriptions', 'user_id', 'newsletter_id');
     }
 }

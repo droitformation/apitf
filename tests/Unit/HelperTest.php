@@ -51,15 +51,6 @@ class HelperTest extends TestCase
         $this->assertEquals($expected,$result);
     }
 
-    public function testRange()
-    {
-        $range = weekRange('2016-01-12');
-
-        echo '<pre>';
-        print_r($range->last());
-        echo '</pre>';exit();
-    }
-
     public function testFormatDateOrRange()
     {
         $date = '2017-07-25';

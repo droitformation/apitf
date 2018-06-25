@@ -3,6 +3,7 @@
 class Transfert
 {
     public $site = null;
+    public $newsletter = null;
     public $conversions = [
         'Categorie' => [
             'model'  => 'Categorie',
@@ -54,6 +55,92 @@ class Transfert
         return $this;
     }
 
+    public function makeNewsletter($newsletter)
+    {
+        $new = $this->makeNew('Newsletter');
+
+        $data = array_only($newsletter->toArray(),['titre','from_name','from_email','return_email','unsuscribe','preview','list_id','color','logos','header','soutien']);
+        $data['site_id'] = $this->site->id;
+
+        $this->newsletter = $new->create($data);
+
+        return $this;
+    }
+
+    public function makeCampagne()
+    {
+        $old = $this->getOld('Newsletter_campagnes','Newsletter');
+
+        // Get all old campagnes for newsletter
+        $old_models = $old->with('content')->get();
+
+        // loop over campagnes
+        if(!$old_models->isEmpty()){
+            // make content and convert arret_id, categorie_id and group_id
+            foreach ($old_models as $model){
+
+                $new = $this->makeNew('Newsletter_campagnes','Newsletter');
+                $new->fill(array_only($model->toArray(),['sujet','auteurs','status','send_at','api_campagne_id', 'hidden','created_at']));
+                $new->newsletter_id = $this->newsletter->id;
+                $new->save();
+
+                // content
+                if(!$model->content->isEmpty()){
+                    foreach ($model->content as $content){
+                        $this->makeContent($content,$new);
+                    }
+                }
+            }
+        }
+    }
+
+    public function makeContent($content,$new)
+    {
+        $categories = $this->conversions['Categorie']['table'];
+        $arrets = $this->conversions['Arret']['table'];
+
+        $newcontent = $this->makeNew('Newsletter_contents','Newsletter');
+        $newcontent->fill(array_only($content->toArray(),['type_id','titre','contenu','image','lien','rang']));
+        $newcontent->newsletter_campagne_id = $new->id;
+
+        if(isset($content->arret_id) && isset($arrets[$content->arret_id]) && $content->arret_id){
+            $newcontent->arret_id = $arrets[$content->arret_id];
+        }
+
+        if(isset($content->categorie_id) && isset($categories[$content->categorie_id]) && $content->categorie_id){
+
+            $newcontent->categorie_id = $categories[$content->categorie_id];
+
+            if(isset($content->groupe_id) && $content->groupe_id){
+                // make new group
+                $newgroup = $this->makeGroupe($content);
+                $newcontent->groupe_id = $newgroup->id;
+            }
+        }
+
+        $newcontent->save();
+    }
+
+    public function makeGroupe($content)
+    {
+        $categories = $this->conversions['Categorie']['table'];
+        $arrets = $this->conversions['Arret']['table'];
+
+        // make new group
+        $newgroup = $this->makeNew('Groupe', 'Arret');
+        $newgroup->categorie_id = $categories[$content->categorie_id];
+        $newgroup->save();
+
+        $relations = $content->groupe->arrets->pluck('id')->all();
+        // Convert to new ids with table
+        $ids = array_intersect_key($arrets, array_flip($relations));
+
+        // attach to new model
+        $newgroup->arrets()->attach(array_values($ids));
+
+        return $newgroup;
+    }
+
     public function makeNewModels($type)
     {
         $old = $this->getOld($type['model']);
@@ -78,7 +165,7 @@ class Transfert
             $new->save();
 
             // complete conversion table
-            $this->conversions[$type['model']]['table'][$model->id ] = $new->id;
+            $this->conversions[$type['model']]['table'][$model->id] = $new->id;
 
             if(!empty($type['relations'])){
                 foreach($type['relations'] as $relation){
@@ -100,23 +187,25 @@ class Transfert
         }
     }
 
-    public function getOld($model)
+    public function getOld($model, $parent = null)
     {
-        $old = $this->getModel($model);
+        $old = $this->getModel($model,$parent);
 
         return $old->setConnection('transfert');
     }
 
-    public function makeNew($model)
+    public function makeNew($model, $parent = null)
     {
-        $new = $this->getModel($model);
+        $new = $this->getModel($model,$parent);
 
         return $new->setConnection('testing_transfert');
     }
 
-    public function getModel($name)
+    public function getModel($name,$parent = null)
     {
-        $model = '\App\Droit\Transfert\\'.$name.'\Entities\\'.$name;
+        $parent = $parent ? $parent : $name;
+
+        $model = '\App\Droit\Transfert\\'.$parent.'\Entities\\'.$name;
         return new $model();
     }
 }

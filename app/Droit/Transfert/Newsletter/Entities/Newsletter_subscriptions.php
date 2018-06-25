@@ -7,6 +7,7 @@ class Newsletter_subscriptions extends Model {
     public $timestamps = false;
 
 	protected $fillable = ['user_id','newsletter_id'];
+    protected $connection = 'transfert';
 
     public function newsletter()
     {

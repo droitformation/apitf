@@ -5,8 +5,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Newsletter_campagnes extends Model {
 
-	protected $fillable = ['sujet','auteurs','newsletter_id','status','send_at','api_campagne_id', 'hidden'];
-
+	protected $fillable = ['sujet','auteurs','newsletter_id','status','send_at','api_campagne_id', 'hidden','created_at'];
+    protected $connection = 'transfert';
     use SoftDeletes;
 
     protected $dates = ['deleted_at','send_at'];
@@ -18,6 +18,6 @@ class Newsletter_campagnes extends Model {
 
     public function content(){
 
-        return $this->hasMany('App\Droit\Transfert\Newsletter\Entities\Newsletter_contents', 'newsletter_campagne_id')->orderBy('rang');
+        return $this->hasMany('App\Droit\Transfert\Newsletter\Entities\Newsletter_contents', 'newsletter_campagne_id');
     }
 }

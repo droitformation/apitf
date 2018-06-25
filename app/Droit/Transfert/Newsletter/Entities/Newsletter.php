@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Newsletter extends Model {
 
 	protected $fillable = ['titre','from_name','from_email','return_email','unsuscribe','preview','site_id','list_id','color','logos','header','soutien'];
-
+    protected $connection = 'transfert';
     use SoftDeletes;
 
     protected $dates = ['deleted_at'];
@@ -18,6 +18,7 @@ class Newsletter extends Model {
 
     public function subscriptions()
     {
-        return $this->belongsToMany('App\Droit\Transfert\Newsletter\Entities\Newsletter_users', 'newsletter_subscriptions', 'newsletter_id','user_id');
+        $database = $this->getConnection()->getDatabaseName();
+        return $this->belongsToMany('App\Droit\Transfert\Newsletter\Entities\Newsletter_users', $database.'.newsletter_subscriptions', 'newsletter_id','user_id');
     }
 }

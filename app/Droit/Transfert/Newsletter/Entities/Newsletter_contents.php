@@ -7,6 +7,7 @@ class Newsletter_contents extends Model {
 	protected $fillable = ['type_id','titre','contenu','image','lien','arret_id','categorie_id','product_id','colloque_id','newsletter_campagne_id','rang','groupe_id'];
 
     public $timestamps = false;
+    protected $connection = 'transfert';
 
     public function campagne(){
 
