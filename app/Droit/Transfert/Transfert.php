@@ -4,6 +4,7 @@ class Transfert
 {
     public $site = null;
     public $newsletter = null;
+    public $oldnewsletter = null;
     public $conversions = [
         'Categorie' => [
             'model'  => 'Categorie',
@@ -63,6 +64,7 @@ class Transfert
         $data['site_id'] = $this->site->id;
 
         $this->newsletter = $new->create($data);
+        $this->oldnewsletter = $newsletter->id;
 
         return $this;
     }
@@ -139,6 +141,31 @@ class Transfert
         $newgroup->arrets()->attach(array_values($ids));
 
         return $newgroup;
+    }
+
+    public function makeSubscriptions()
+    {
+        $old = $this->getOld('Newsletter_users','Newsletter');
+
+        // Get all old users for newsletters
+        $subscribers = $old->get();
+        // loop over users
+        if(!$subscribers->isEmpty()){
+            foreach ($subscribers as $subscriber){
+
+                $newuser = $this->makeNew('Newsletter_users','Newsletter');
+                $newuser->fill(array_only($subscriber->toArray(),['email','activation_token','activated_at']));
+
+                $ids = $subscriber->subscriptions->pluck('id')->all();
+                // attach to new model
+                if(!empty($ids)){
+                    $newuser->subscriptions()->attach([$this->newsletter->id]);
+                }
+
+            }
+        }
+        // get and make new subscriptions
+
     }
 
     public function makeNewModels($type)
