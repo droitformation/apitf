@@ -12,6 +12,8 @@
 */
 
 Route::match(['get', 'post'],'/','FrontendController@index');
+Route::get('transfert','FrontendController@transfert');
+Route::post('dotransfert','FrontendController@dotransfert');
 
 Route::group(['prefix' => 'praticien'], function () {
 
@@ -87,9 +89,9 @@ Route::get('arret', function () {
     $model = $transfert->getOld('Newsletter');
     $model = $model->first();
 
-    $transfert->makeSite($data)->prepare();
-    $transfert->makeNewsletter($model)->makeCampagne();
-    $transfert->makeSubscriptions();
+    //$transfert->makeSite($data)->prepare();
+   // $transfert->makeNewsletter($model)->makeCampagne();
+    //$transfert->makeSubscriptions();
 
     echo '<pre>';
     print_r($model);

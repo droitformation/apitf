@@ -34,4 +34,24 @@ class FrontendController extends Controller
         return view('welcome')->with(['results' => $results, 'logs' => $logs]);
     }
 
+    public function transfert()
+    {
+        return view('transfert');
+    }
+
+    public function dotransfert(Request $request)
+    {
+        setEnv('DB_DATABASE_TRANSFERT', $request->input('database'));
+
+        $transfert = new \App\Droit\Transfert\Transfert();
+
+        $model = $transfert->getOld('Newsletter');
+        $model = $model->first();
+
+        $transfert->makeSite($request->all())->prepare();
+        $transfert->makeNewsletter($model)->makeCampagne();
+        $transfert->makeSubscriptions();
+
+        return redirect()->back();
+    }
 }
