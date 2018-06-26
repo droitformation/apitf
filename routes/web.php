@@ -66,12 +66,20 @@ Route::get('arret', function () {
 
     $faker = \Faker\Factory::create();
 
+/*    $data = [
+        'nom'    => 'Droit du travail',
+        'url'    => 'http://droitdutravail.ch',
+        'logo'   => 'droitdutravail.png',
+        'slug'   => 'droitdutravail',
+        'prefix' => 'droitdutravail'
+    ];*/
+
     $data = [
-        'nom'    => $faker->word,
-        'url'    => $faker->url,
-        'logo'   => $faker->word,
-        'slug'   => $faker->word,
-        'prefix' => $faker->word
+        'nom'    => 'RC Assurances',
+        'url'    => 'http://rcassurances.ch',
+        'logo'   => 'rcassurances.png',
+        'slug'   => 'rcassurances',
+        'prefix' => 'rcassurances'
     ];
 
     $transfert = new App\Droit\Transfert\Transfert();
@@ -81,6 +89,7 @@ Route::get('arret', function () {
 
     $transfert->makeSite($data)->prepare();
     $transfert->makeNewsletter($model)->makeCampagne();
+    $transfert->makeSubscriptions();
 
     echo '<pre>';
     print_r($model);

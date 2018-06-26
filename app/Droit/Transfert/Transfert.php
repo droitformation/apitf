@@ -2,6 +2,7 @@
 
 class Transfert
 {
+    public $connection = 'transfert';
     public $site = null;
     public $newsletter = null;
     public $oldnewsletter = null;
@@ -149,23 +150,42 @@ class Transfert
 
         // Get all old users for newsletters
         $subscribers = $old->get();
+
         // loop over users
         if(!$subscribers->isEmpty()){
             foreach ($subscribers as $subscriber){
 
                 $newuser = $this->makeNew('Newsletter_users','Newsletter');
-                $newuser->fill(array_only($subscriber->toArray(),['email','activation_token','activated_at']));
+
+                //$newuser->fill(array_filter(array_only($subscriber->toArray(),['email','activation_token','activated_at'])));
+                $newuser->email = $subscriber->email;
+                $newuser->activation_token = $subscriber->activation_token;
+                $newuser->activated_at = $subscriber->activated_at && $this->valid($subscriber->activated_at->toDateTimeString()) ? $subscriber->activated_at : \Carbon\Carbon::today()->toDateTimeString();
+
+                $newuser->save();
+                $newuser = $newuser->fresh();
 
                 $ids = $subscriber->subscriptions->pluck('id')->all();
+
                 // attach to new model
                 if(!empty($ids)){
-                    $newuser->subscriptions()->attach([$this->newsletter->id]);
+                    $newuser->subscriptions()->attach($this->newsletter->id);
                 }
-
             }
         }
-        // get and make new subscriptions
+    }
 
+    public function valid($date)
+    {
+        if(!$date){
+            return false;
+        }
+
+        if($date == '0000-00-00 00:00:00') {
+            return false;
+        }
+
+        return true;
     }
 
     public function makeNewModels($type)
@@ -173,7 +193,7 @@ class Transfert
         $old = $this->getOld($type['model']);
 
         // Get all
-        $old_models = $old->setConnection('transfert')->with($type['relations'])->get();
+        $old_models = $old->setConnection($this->connection)->with($type['relations'])->get();
 
         // Loop
         foreach ($old_models as $model){
@@ -218,7 +238,7 @@ class Transfert
     {
         $old = $this->getModel($model,$parent);
 
-        return $old->setConnection('transfert');
+        return $old->setConnection($this->connection);
     }
 
     public function makeNew($model, $parent = null)

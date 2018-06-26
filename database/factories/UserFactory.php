@@ -123,8 +123,6 @@ $factory->define(App\Droit\Transfert\Newsletter\Entities\Newsletter_contents::cl
         'lien'         => null,
         'arret_id'     => null,
         'categorie_id' => null,
-        'product_id'   => null,
-        'colloque_id'  => null,
         'newsletter_campagne_id' => 1,
         'rang'      => 1,
         'groupe_id' => null,

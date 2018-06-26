@@ -13,7 +13,7 @@ class TransfertTest extends TestCase
     public function setUp(){
         parent::setUp();
 
-        $this->app['config']->set('database.default','testing_transfert');
+        $this->app['config']->set('database.default','transfert_testing');
         $this->reset_all();
     }
 
@@ -76,12 +76,12 @@ class TransfertTest extends TestCase
 
     public function testTranfertTonewGroup()
     {
-        $site = factory(\App\Droit\Transfert\Site\Entities\Site::class)->create();
-        $categories = factory(\App\Droit\Transfert\Categorie\Entities\Categorie::class,3)->create();
-        $arret = factory(\App\Droit\Transfert\Arret\Entities\Arret::class)->create();
-        $newsletter = factory(\App\Droit\Transfert\Newsletter\Entities\Newsletter::class)->create(['site_id' => $site->id]);
-        $campagne = factory(\App\Droit\Transfert\Newsletter\Entities\Newsletter_campagnes::class)->create(['newsletter_id' => $newsletter->id,]);
-        $groupe = factory(\App\Droit\Transfert\Arret\Entities\Groupe::class)->create(['categorie_id' => $categories->first()->id,]);
+        $site = factory(\App\Droit\Transfert\Site\Entities\Site::class)->connection('transfert_testing')->create();
+        $categories = factory(\App\Droit\Transfert\Categorie\Entities\Categorie::class,3)->connection('transfert_testing')->create();
+        $arret = factory(\App\Droit\Transfert\Arret\Entities\Arret::class)->connection('transfert_testing')->create();
+        $newsletter = factory(\App\Droit\Transfert\Newsletter\Entities\Newsletter::class)->connection('transfert_testing')->create(['site_id' => $site->id]);
+        $campagne = factory(\App\Droit\Transfert\Newsletter\Entities\Newsletter_campagnes::class)->connection('transfert_testing')->create(['newsletter_id' => $newsletter->id,]);
+        $groupe = factory(\App\Droit\Transfert\Arret\Entities\Groupe::class)->connection('transfert_testing')->create(['categorie_id' => $categories->first()->id,]);
 
         $groupe->arrets()->attach([$arret->id]);
 
@@ -105,21 +105,42 @@ class TransfertTest extends TestCase
 
     public function testMakeNewsletter()
     {
-  /*      $newsletter = factory(\App\Droit\Transfert\Newsletter\Entities\Newsletter::class)->create(['site_id' => null]);
+        $transfert = new \App\Droit\Transfert\Transfert();
+        $transfert->connection = 'transfert_testing';
+
+        $newsletter  = factory(\App\Droit\Transfert\Newsletter\Entities\Newsletter::class)->connection('transfert_testing')->create(['site_id' => null]);
+        $subcriber   = factory(\App\Droit\Transfert\Newsletter\Entities\Newsletter_users::class)->connection('transfert_testing')->create();
+        $subcription = factory(\App\Droit\Transfert\Newsletter\Entities\Newsletter_subscriptions::class)->connection('transfert_testing')->create([
+            'user_id'       => $subcriber->id,
+            'newsletter_id' => $newsletter->id
+        ]);
+
+        $newsletter = $newsletter->fresh();
 
         $data = [
-            'nom'    => $faker->word,
-            'url'    => $faker->url,
-            'logo'   => $faker->word,
-            'slug'   => $faker->word,
-            'prefix' => $faker->word
+            'nom'    => $this->faker->word,
+            'url'    => $this->faker->url,
+            'logo'   => $this->faker->word,
+            'slug'   => $this->faker->word,
+            'prefix' => $this->faker->word
         ];
 
+        $transfert->makeSite($data)->makeNewsletter($newsletter);
+        $transfert->makeSubscriptions();
+
+        $newuser = $transfert->makeNew('Newsletter_users','Newsletter');
+        $newuser = $newuser->setConnection('transfert_testing')->get();
+
+        $this->assertEquals(1,$newuser->count());
+
+    }
+
+    public function testValideDate()
+    {
         $transfert = new \App\Droit\Transfert\Transfert();
 
-        $transfert->makeSite($data)->makeNewsletter($newsletter);
-
-        $this->assertInstanceOf('App\Droit\Transfert\Newsletter\Entities\Newsletter',$transfert->newsletter);*/
-
+        $this->assertTrue($transfert->valid('2018-07-01 12:00:00'));
+        $this->assertFalse($transfert->valid('0000-00-00 00:00:00'));
+        $this->assertFalse($transfert->valid(null));
     }
 }
