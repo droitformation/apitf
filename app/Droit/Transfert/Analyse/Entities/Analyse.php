@@ -9,6 +9,13 @@ class Analyse extends Model {
     protected $dates    = ['pub_date','created_at','updated_at'];
     protected $connection = 'transfert';
 
+    public function scopeYears($query, $years)
+    {
+        if(!empty($years)) {
+            $query->whereIn(\DB::raw("year(pub_date)"), $years)->get();
+        }
+    }
+
     public function categories()
     {
         $database = $this->getConnection()->getDatabaseName();

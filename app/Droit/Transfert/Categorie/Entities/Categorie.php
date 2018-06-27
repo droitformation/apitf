@@ -7,9 +7,14 @@ class Categorie extends Model {
 
     use SoftDeletes;
 
-	protected $fillable = ['title','image','site_id','ismain','hideOnSite','created_at'];
+	protected $fillable = ['title','image','site_id','ismain','hideOnSite','created_at','parent_id'];
     protected $dates    = ['created_at','updated_at','deleted_at'];
     protected $connection = 'transfert';
+
+    public function parent()
+    {
+        return $this->belongsTo('App\Droit\Transfert\Categorie\Entities\Parent_categorie');
+    }
 
     public function arrets()
     {

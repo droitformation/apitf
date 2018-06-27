@@ -15,6 +15,8 @@ Route::match(['get', 'post'],'/','FrontendController@index');
 Route::get('transfert','FrontendController@transfert');
 Route::post('dotransfert','FrontendController@dotransfert');
 
+Route::get('api','ContentController@index');
+
 Route::group(['prefix' => 'praticien'], function () {
 
     Route::get('newsletter/{date?}','Praticien\NewsletterController@index');
@@ -85,16 +87,32 @@ Route::get('arret', function () {
     ];
 
     $transfert = new App\Droit\Transfert\Transfert();
+    $transfert->connection = 'transfert_testing';
 
-    $model = $transfert->getOld('Newsletter');
-    $model = $model->first();
+    $cateorie = [
+        'model'  => 'Categorie',
+        'except' => ['id','pid','user_id','deleted'],
+        'relations' => [],
+        'table'  => []
+    ];
+
+    //$model = $model->first();
 
     //$transfert->makeSite($data)->prepare();
    // $transfert->makeNewsletter($model)->makeCampagne();
     //$transfert->makeSubscriptions();
 
+    $jurisprudence = new App\Droit\Api\Jurisprudence();
+
+    $model = $jurisprudence->getModel('Site')->setConnection('testing_transfert');
+    $model = $model->first();
+
+    $arrets   = $jurisprudence->setConnection('testing_transfert')->setSite($model->id)->liste('Arret',['categories','analyses']);
+    $analyses = $jurisprudence->setConnection('testing_transfert')->setSite($model->id)->liste('Analyse',['authors','categories','arrets']);
+    $categories = $jurisprudence->setConnection('testing_transfert')->setSite($model->id)->liste('Categorie',[]);
+
     echo '<pre>';
-    print_r($model);
+    print_r($categories);
     echo '</pre>';exit();
 
 /*    $model = $transfert->getOld('Analyse');
@@ -152,7 +170,7 @@ Route::get('arret', function () {
 
 });
 
-Route::get('decision', 'ArticleController@index');
+//Route::get('decision', 'ContentController@index');
 
 /*Route::get('archive', function () {
 

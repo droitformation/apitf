@@ -95,7 +95,6 @@ return [
             'strict'    => false,
         ],
 
-
         'transfert_testing' => [
             'driver'    => 'mysql',
             'host'      => env('DB_TEST_HOST', 'localhost'),

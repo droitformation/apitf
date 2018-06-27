@@ -10,6 +10,7 @@ class Site extends Model{
     protected $dates    = ['deleted_at'];
     protected $table    = 'sites';
     protected $fillable = ['nom','url','logo','slug','prefix'];
+    protected $connection = 'transfert';
 
     public function arrets()
     {

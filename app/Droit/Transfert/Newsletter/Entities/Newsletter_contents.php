@@ -29,7 +29,6 @@ class Newsletter_contents extends Model {
         return $this->belongsTo('App\Droit\Transfert\Categorie\Entities\Categorie');
     }
 
-    // Has to be defined in configuration 
     public function arret()
     {
         return $this->hasOne('App\Droit\Transfert\Arret\Entities\Arret', 'id', 'arret_id');

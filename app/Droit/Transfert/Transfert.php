@@ -9,7 +9,7 @@ class Transfert
     public $conversions = [
         'Categorie' => [
             'model'  => 'Categorie',
-            'except' => ['id','pid','user_id','deleted','parent_id'],
+            'except' => ['id','pid','user_id','deleted'],
             'relations' => [],
             'table'  => []
         ],
@@ -207,6 +207,7 @@ class Transfert
 
             if($type['model'] == 'Categorie'){
                 $new->image = $this->site->slug.'/'.$model->image;
+                $new->parent_id = $model->parent_id;
             }
 
             $new->save();
