@@ -53,7 +53,7 @@ class NewsletterController extends Controller
             $more = '/';
             $unsuscribe = '/';
 
-            $arrets = $this->decision->getWeekPublished(weekRange($start,$end));
+            $arrets = $this->decision->getWeekPublished(weekRange($start,$end)->toArray());
 
             $html = view('emails.newsletter')->with(['arrets' => $arrets, 'date' => $date, 'week' => $week, 'more' => $more, 'unsuscribe' => $unsuscribe])->render();
         }
