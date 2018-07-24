@@ -201,9 +201,7 @@ class Transfert
             $new->fill(array_except($model->toArray(),$type['except']));
 
             // Set site_id and site slug if necessary
-            if($type['model'] != 'Author'){
-                $new->site_id = $this->site->id;
-            }
+            $new->site_id = $this->site->id;
 
             if($type['model'] == 'Categorie'){
                 $new->image = $this->site->slug.'/'.$model->image;

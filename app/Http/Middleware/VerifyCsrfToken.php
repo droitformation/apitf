@@ -17,5 +17,9 @@ class VerifyCsrfToken extends Middleware
         'api/abo/make',
         'api/abo/remove',
         'api/abo/cadence',
+        'api/arrets',
+        'api/authors',
+        'api/categories',
+        'api/annees',
     ];
 }

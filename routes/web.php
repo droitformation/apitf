@@ -15,7 +15,12 @@ Route::match(['get', 'post'],'/','FrontendController@index');
 Route::get('transfert','FrontendController@transfert');
 Route::post('dotransfert','FrontendController@dotransfert');
 
-Route::get('api','ContentController@index');
+//Route::post('api','ContentController@index');
+
+Route::post('api/arrets','ContentController@arrets');
+Route::post('api/categories','ContentController@categories');
+Route::post('api/annees','ContentController@annees');
+Route::post('api/authors','ContentController@authors');
 
 Route::group(['prefix' => 'praticien'], function () {
 
@@ -66,62 +71,63 @@ Route::get('alert', function () {
     return new \App\Mail\AlerteDecision($user, weekRange('2018-05-31')->toArray(), $abos);
 });
 
-Route::get('arret', function () {
-
-    $faker = \Faker\Factory::create();
-
-/*    $data = [
-        'nom'    => 'Droit du travail',
-        'url'    => 'http://droitdutravail.ch',
-        'logo'   => 'droitdutravail.png',
-        'slug'   => 'droitdutravail',
-        'prefix' => 'droitdutravail'
-    ];*/
-
-    $data = [
-        'nom'    => 'RC Assurances',
-        'url'    => 'http://rcassurances.ch',
-        'logo'   => 'rcassurances.png',
-        'slug'   => 'rcassurances',
-        'prefix' => 'rcassurances'
+Route::get('transfert', function () {
+    $site_data = [
+        'rca' => [
+            'nom'    => 'RC Assurances',
+            'url'    => 'http://rcassurances.ch',
+            'logo'   => 'rcassurances.png',
+            'slug'   => 'rcassurances',
+            'prefix' => 'rcassurances'
+        ],
+        'ddt' => [
+            'nom'    => 'Droit du travail',
+            'url'    => 'http://droitdutravail.ch',
+            'logo'   => 'droitdutravail.png',
+            'slug'   => 'droitdutravail',
+            'prefix' => 'droitdutravail'
+        ]
     ];
+
+    $newsletter = new \App\Droit\Transfert\Newsletter\Entities\Newsletter();
+    $model = $newsletter->get();
 
     $transfert = new App\Droit\Transfert\Transfert();
     $transfert->connection = 'transfert_testing';
 
-    $cateorie = [
-        'model'  => 'Categorie',
-        'except' => ['id','pid','user_id','deleted'],
-        'relations' => [],
-        'table'  => []
-    ];
+    $model = $model->first();
 
-    //$model = $model->first();
+    $transfert->makeSite($site_data[env('DB_DATABASE_TRANSFERT')])->prepare();
+    $transfert->makeNewsletter($model)->makeCampagne();
+    $transfert->makeSubscriptions();
+});
 
-    //$transfert->makeSite($data)->prepare();
-   // $transfert->makeNewsletter($model)->makeCampagne();
-    //$transfert->makeSubscriptions();
+Route::get('arret', function () {
+
+    $faker = \Faker\Factory::create();
 
     $jurisprudence = new App\Droit\Api\Jurisprudence();
 
-    $model = $jurisprudence->getModel('Site')->setConnection('testing_transfert');
-    $model = $model->first();
+    $sites = $jurisprudence->getModel('Site')->setConnection('testing_transfert');
+    $site = $sites->first();
 
-    $arrets   = $jurisprudence->setConnection('testing_transfert')->setSite($model->id)->liste('Arret',['categories','analyses']);
-    $analyses = $jurisprudence->setConnection('testing_transfert')->setSite($model->id)->liste('Analyse',['authors','categories','arrets']);
-    $categories = $jurisprudence->setConnection('testing_transfert')->setSite($model->id)->liste('Categorie',[]);
+    $arrets     = $jurisprudence->setConnection('testing_transfert')->setSite($site->id)->arrets();
+    $analyses   = $jurisprudence->setConnection('testing_transfert')->setSite($site->id)->analyses();
+    $authors    = $jurisprudence->setConnection('testing_transfert')->setSite($site->id)->authors();
 
     echo '<pre>';
-    print_r($categories);
+    print_r($arrets);
     echo '</pre>';exit();
 
-/*    $model = $transfert->getOld('Analyse');
 
-    $relations = $model->first()->categories->pluck('id')->all();
-    $ids = array_intersect_key([63 => 12, 13 => 24], array_flip($relations));
+    /*
+    /*    $model = $transfert->getOld('Analyse');
 
-    echo '<pre>';
-    print_r($ids);*/
+        $relations = $model->first()->categories->pluck('id')->all();
+        $ids = array_intersect_key([63 => 12, 13 => 24], array_flip($relations));
+
+        echo '<pre>';
+        print_r($ids);*/
     echo '</pre>';exit();
 
 /*    $ipverify = new \App\Droit\Uptime\IP();

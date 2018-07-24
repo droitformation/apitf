@@ -37,7 +37,7 @@ class Jurisprudence
     {
         $model = $this->getModel('Author');
 
-        return $model->where('site_id','=',$this->site)->where('hideOnSite', '=', 0)->with(['analyses'])->orderBy('title', 'ASC')->get();
+        return $model->where('site_id','=',$this->site)->with(['analyses'])->orderBy('last_name', 'ASC')->get();
     }
 
     public function categories()
