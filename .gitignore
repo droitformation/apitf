@@ -12,3 +12,4 @@ yarn-error.log
 .env
 /database/database.sqlite
 /database/bak/
+/files
