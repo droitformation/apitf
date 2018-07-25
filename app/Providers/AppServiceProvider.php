@@ -35,6 +35,7 @@ class AppServiceProvider extends ServiceProvider
         $this->registerAlertWorkerService();
         $this->registerAboWorkerService();
         $this->registerUserWorkerService();
+        $this->registerSiteService();
 
     }
 
@@ -200,4 +201,14 @@ class AppServiceProvider extends ServiceProvider
         });
     }
 
+    /**
+     * Site
+     */
+    protected function registerSiteService(){
+
+        $this->app->singleton('App\Droit\Transfert\Site\Repo\SiteInterface', function()
+        {
+            return new \App\Droit\Transfert\Site\Repo\SiteEloquent(new \App\Droit\Transfert\Site\Entities\Site);
+        });
+    }
 }

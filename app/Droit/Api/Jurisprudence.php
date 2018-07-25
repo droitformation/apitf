@@ -33,6 +33,13 @@ class Jurisprudence
         return $this;
     }
 
+    // Site id
+    public function getNewsletter()
+    {
+        $sites  = \App::make('App\Droit\Transfert\Site\Repo\SiteInterface');
+
+    }
+
     public function authors()
     {
         $model = $this->getModel('Author');
@@ -51,8 +58,7 @@ class Jurisprudence
     {
         $model   = $this->getModel('Arret');
         $exclude = $this->exclude();
-
-        $model = $model->where('site_id','=',$this->site)->whereNotIn('id', $exclude);
+        $model   = $model->where('site_id','=',$this->site)->whereNotIn('id', $exclude);
 
         if(isset($options['categories'])){
             $model = $model->categories($options['categories']);
@@ -81,7 +87,7 @@ class Jurisprudence
         return $model->with(['authors','categories','arrets'])->orderBy('pub_date', 'DESC')->get();
     }
 
-    public function annees()
+    public function years()
     {
         $arrets = $this->arrets();
 
@@ -93,7 +99,9 @@ class Jurisprudence
     public function exclude()
     {
         $model     = $this->getModel('Newsletter_campagnes','Newsletter');
-        $campagnes = $model->setConnection($this->connection)->where('status','='.'brouillon')->get();
+        $campagnes = $model->where('status','=','brouillon')->whereHas('newsletter', function ($query) {
+                        $query->where('site_id', '=', $this->site);
+                    })->get();
 
         return $campagnes->flatMap(function ($campagne) {
             return $campagne->content;
@@ -121,13 +129,16 @@ class Jurisprudence
         return $model;
     }
 
-    /*
-        $years      = $this->arret->annees();
-        $exclude    = $this->newsworker->arretsToHide([3]);
-        $arrets     = $this->arret->getAllActives($exclude);
+    public function newsletter($id = null)
+    {
+        $model = $this->getModel('Newsletter_campagnes','Newsletter');
 
-        $analyses   = $this->analyse->getAll($exclude);
-        $categories = $this->categorie->getAll();
-     */
+        if($id){
+            return $model->find($id);
+        }
 
+        return $model->where('status','=','envoyé')->whereHas('newsletter', function ($query) {
+            $query->where('site_id', '=', $this->site);
+        })->orderBy('send_at','DESC')->get();
+    }
 }

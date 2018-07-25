@@ -17,12 +17,15 @@ class Arret extends JsonResource
         return [
             'id'         => $this->id,
             'reference'  => $this->reference,
-            'pub_date'   => $this->pub_date,
+            'pub_date'   => $this->pub_date->formatLocalized('%d %B %Y'),
+            'year'       => $this->pub_date->year,
             'abstract'   => $this->abstract,
-            'file'       => asset('files/arrets/'.$this->file),
+            'pub_text'   => $this->pub_text,
+            'filter'     => $this->filter,
+            'file'       => $this->file ? asset('files/arrets/'.$this->site->slug.'/'.$this->file) : null,
             'dumois'     => $this->dumois,
-            //'categories' => return (new Categorie($categorie)),
-            //'analyses'   => ,
+            'categories' => Categorie::collection($this->categories),
+            'analyses'   => Analyse::collection($this->analyses),
         ];
     }
 }

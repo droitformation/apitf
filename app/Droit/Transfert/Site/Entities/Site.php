@@ -27,4 +27,8 @@ class Site extends Model{
         return $this->hasMany('App\Droit\Transfert\Categorie\Entities\Categorie');
     }
 
+    public function newsletter()
+    {
+        return $this->hasMany('App\Droit\Transfert\Newsletter\Entities\Newsletter')->first();
+    }
 }

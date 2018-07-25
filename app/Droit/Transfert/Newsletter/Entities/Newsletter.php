@@ -10,11 +10,6 @@ class Newsletter extends Model {
     use SoftDeletes;
 
     protected $dates = ['deleted_at'];
-    
-    public function site()
-    {
-        return $this->belongsTo('App\Droit\Transfert\Site\Entities\Site');
-    }
 
     public function subscriptions()
     {

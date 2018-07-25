@@ -8,6 +8,11 @@ class Author extends Model {
     protected $connection = 'transfert';
     public $timestamps  = false;
 
+    public function getNameAttribute()
+    {
+        return $this->first_name.' '.$this->last_name;
+    }
+
     public function analyses()
     {
         $database = $this->getConnection()->getDatabaseName();

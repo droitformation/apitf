@@ -18,9 +18,12 @@ Route::post('dotransfert','FrontendController@dotransfert');
 //Route::post('api','ContentController@index');
 
 Route::post('api/arrets','ContentController@arrets');
+Route::post('api/analyses','ContentController@analyses');
 Route::post('api/categories','ContentController@categories');
-Route::post('api/annees','ContentController@annees');
+Route::post('api/years','ContentController@years');
 Route::post('api/authors','ContentController@authors');
+Route::post('api/newsletter','ContentController@newsletter');
+Route::post('api/archives','ContentController@archives');
 
 Route::group(['prefix' => 'praticien'], function () {
 

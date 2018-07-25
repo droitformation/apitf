@@ -9,11 +9,23 @@ class Analyse extends Model {
     protected $dates    = ['pub_date','created_at','updated_at'];
     protected $connection = 'transfert';
 
+    public function getFilterAttribute()
+    {
+        return $this->categories->map(function ($categorie, $key) {
+            return 'c'.$categorie->id;
+        })->implode(' ');
+    }
+
     public function scopeYears($query, $years)
     {
         if(!empty($years)) {
             $query->whereIn(\DB::raw("year(pub_date)"), $years)->get();
         }
+    }
+
+    public function site()
+    {
+        return $this->belongsTo('\App\Droit\Transfert\Site\Entities\Site');
     }
 
     public function categories()

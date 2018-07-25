@@ -14,10 +14,25 @@ class CategorieCollection extends ResourceCollection
      */
     public function toArray($request)
     {
-        $this->collection->transform(function ($categorie) {
-            return (new Categorie($categorie));
+        $collection = $this->collection;
+
+        $parents = $collection->filter(function ($value, $key) {
+            return isset($value->parent) ? $value : false;
+        })->map(function ($value, $key) {
+            return (new Categorie($value->parent));
+        })->unique('id');
+
+        $collection = $collection->sortBy('parent_id')->groupBy('parent_id')->map(function ($values, $key) {
+            return $values->transform(function ($categorie) {
+                return (new Categorie($categorie));
+            });
         });
 
-        return parent::toArray($request);
+        return [
+            'data' => [
+                'categories' => $collection,
+                'parents' => $parents
+            ],
+        ];
     }
 }

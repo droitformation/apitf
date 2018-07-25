@@ -11,6 +11,20 @@ class Arret extends Model {
 	protected $fillable = ['site_id','user_id','reference','pub_date','abstract','pub_text','file','dumois'];
     protected $dates    = ['pub_date'];
 
+    public function getFilterAttribute()
+    {
+        return $this->categories->map(function ($categorie, $key) {
+            return 'c'.$categorie->id;
+        })->implode(' ');
+    }
+
+    public function getTheTitleAttribute()
+    {
+        setlocale(LC_ALL, 'fr_FR.UTF-8');
+
+        return $this->reference.' du '.$this->pub_date->formatLocalized('%d %B %Y');
+    }
+
     public function scopeCategories($query, $categories)
     {
         if(!empty($categories)) {
@@ -45,4 +59,10 @@ class Arret extends Model {
     {
         return $this->hasMany('App\Droit\Transfert\Newsletter\Entities\Newsletter_contents', 'arret_id');
     }
+
+    public function site()
+    {
+        return $this->belongsTo('\App\Droit\Transfert\Site\Entities\Site');
+    }
+
 }

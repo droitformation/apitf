@@ -15,10 +15,11 @@ class Categorie extends JsonResource
     public function toArray($request)
     {
         return [
-            'id' => $this->id,
+            'id'    => $this->id,
             'title' => $this->title,
             'image' => asset('files/pictos/'.$this->image),
             'parent_id' => $this->parent_id,
+            'parent' => isset($this->parent) ? $this->parent : null,
         ];
     }
 }
