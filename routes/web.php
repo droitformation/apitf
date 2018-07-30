@@ -22,7 +22,7 @@ Route::post('api/analyses','ContentController@analyses');
 Route::post('api/categories','ContentController@categories');
 Route::post('api/years','ContentController@years');
 Route::post('api/authors','ContentController@authors');
-Route::post('api/newsletter','ContentController@newsletter');
+Route::post('api/campagne','ContentController@campagne');
 Route::post('api/archives','ContentController@archives');
 
 Route::group(['prefix' => 'praticien'], function () {

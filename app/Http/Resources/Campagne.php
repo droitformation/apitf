@@ -14,11 +14,19 @@ class Campagne extends JsonResource
      */
     public function toArray($request)
     {
+        // arret ou contenu
         return [
-            'id'      => $this->id,
-            'sujet'   => $this->sujet,
-            'auteurs' => $this->auteurs,
-            //'arrets'  => Arret::collection($this->arrets),
+            'type_id'      => $this->type_id,
+            'partial'      => $this->type->partial,
+            'titre'        => $this->titre,
+            'contenu'      => $this->contenu,
+            'image'        => isset($this->image) ? secure_asset(config('newsletter.path.upload').$this->image) : null,
+            'lien'         => $this->lien,
+            'arret_id'     => $this->arret_id,
+            'arret'        => isset($this->arret) ? (new Arret($this->arret)) : null,
+            'categorie_id' => $this->categorie_id,
+            'rang'         => $this->rang,
+            'groupe_id'    => $this->groupe_id,
         ];
     }
 }

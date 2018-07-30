@@ -11,7 +11,7 @@ class Newsletter_contents extends Model {
 
     public function campagne(){
 
-        return $this->belongsTo('App\Droit\Transfert\Newsletter\Entities\Newsletter_campagnes');
+        return $this->belongsTo('App\Droit\Transfert\Newsletter\Entities\Newsletter_campagnes', 'newsletter_campagne_id');
     }
 
     public function newsletter(){

@@ -137,8 +137,17 @@ class Jurisprudence
             return $model->find($id);
         }
 
-        return $model->where('status','=','envoyé')->whereHas('newsletter', function ($query) {
+        return $model->where('status','=','envoyé')->with(['newsletter'])->whereHas('newsletter', function ($query) {
             $query->where('site_id', '=', $this->site);
         })->orderBy('send_at','DESC')->get();
+    }
+
+    public function last()
+    {
+        $model = $this->getModel('Newsletter_campagnes','Newsletter');
+
+        return $model->where('status','=','envoyé')->with(['newsletter'])->whereHas('newsletter', function ($query) {
+            $query->where('site_id', '=', $this->site);
+        })->orderBy('send_at','DESC')->first();
     }
 }

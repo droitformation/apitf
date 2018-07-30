@@ -15,6 +15,7 @@ use App\Http\Resources\AnneeCollection as AnneeCollection;
 use App\Http\Resources\AuthorCollection as AuthorCollection;
 use App\Http\Resources\NewsletterCollection as NewsletterCollection;
 use App\Http\Resources\Newsletter as Newsletter;
+use App\Http\Resources\NewsletterCampagne as NewsletterCampagne;
 
 class ContentController extends Controller
 {
@@ -80,13 +81,18 @@ class ContentController extends Controller
         return new AuthorCollection($authors);
     }
 
-    public function newsletter(Request $request)
+    public function campagne(Request $request)
     {
         $this->api->setConnection('testing_transfert')->setSite($request->input('params')['site_id']);
 
-        $newsletter = $this->api->newsletter($request->input('params')['id']);
+        if(isset($request->input('params')['id']) && !empty($request->input('params')['id'])){
+            $campagne = $this->api->newsletter($request->input('params')['id']);
+        }
+        else{
+            $campagne = $this->api->last();
+        }
 
-        return new Campagne($newsletter);
+        return new NewsletterCampagne($campagne);
     }
 
     public function archives(Request $request)
