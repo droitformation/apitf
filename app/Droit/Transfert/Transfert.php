@@ -134,12 +134,16 @@ class Transfert
         $newgroup->categorie_id = $categories[$content->categorie_id];
         $newgroup->save();
 
-        $relations = $content->groupe->arrets->pluck('id')->all();
+        // $relations = $content->groupe->arrets->pluck('id')->all();
         // Convert to new ids with table
-        $ids = array_intersect_key($arrets, array_flip($relations));
+        //$ids = array_intersect_key($arrets, array_flip($relations));
 
-        // attach to new model
-        $newgroup->arrets()->attach(array_values($ids));
+        $ids = $content->groupe->arrets->mapWithKeys(function ($item, $key) use ($arrets) {
+            return isset($arrets[$item->id]) ? [$arrets[$item->id] => ['sorting' => $item->pivot->sorting]] : [];
+        })->map(function ($item, $key) use ($newgroup) {
+            // attach to new model
+            $newgroup->arrets()->attach($key,$item);
+        });
 
         return $newgroup;
     }

@@ -14,7 +14,7 @@ class NewsletterCampagne extends JsonResource
      */
     public function toArray($request)
     {
-        $blocs = $this->content->map(function ($content) {
+        $blocs = $this->content->map(function ($content, $key) {
             return (new Campagne($content));
         });
 

@@ -111,7 +111,7 @@ Route::get('arret', function () {
 
     $jurisprudence = new App\Droit\Api\Jurisprudence();
 
-    $sites = $jurisprudence->getModel('Site')->setConnection('testing_transfert');
+/*    $sites = $jurisprudence->getModel('Site')->setConnection('testing_transfert');
     $site = $sites->first();
 
     $arrets     = $jurisprudence->setConnection('testing_transfert')->setSite($site->id)->arrets();
@@ -120,10 +120,30 @@ Route::get('arret', function () {
 
     echo '<pre>';
     print_r($arrets);
+    echo '</pre>';exit();*/
+
+
+    $contents = $jurisprudence->getModel('Newsletter_contents','Newsletter')->setConnection('testing_transfert');
+    $bloc = $contents->find(515);
+
+    // old => new
+    $conversion = [
+         1279 => 12,
+         1280 => 13,
+         1281 => 14,
+         1284 => 15,
+    ];
+
+    $sorted = $bloc->groupe->arrets->mapWithKeys(function ($item, $key) use ($conversion) {
+        return isset($conversion[$item->id]) ? [$conversion[$item->id] => ['sorting' => $item->pivot->sorting]] : [];
+    });
+
+    echo '<pre>';
+    print_r($sorted);
     echo '</pre>';exit();
-
-
-    /*
+    echo '<pre>';
+    print_r($bloc->groupe->arrets->pluck('id','pivot.sorting'));
+    echo '</pre>';exit();
     /*    $model = $transfert->getOld('Analyse');
 
         $relations = $model->first()->categories->pluck('id')->all();

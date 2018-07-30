@@ -15,7 +15,8 @@ class Groupe extends Model {
     public function arrets()
     {
         $database = $this->getConnection()->getDatabaseName();
-        return $this->belongsToMany('\App\Droit\Transfert\Arret\Entities\Arret', $database.'.arrets_groupes', 'groupe_id', 'arret_id');
+        return $this->belongsToMany('\App\Droit\Transfert\Arret\Entities\Arret', $database.'.arrets_groupes', 'groupe_id', 'arret_id')
+            ->withPivot('sorting');
     }
 
     public function categorie()
