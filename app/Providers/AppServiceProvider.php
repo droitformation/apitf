@@ -37,6 +37,9 @@ class AppServiceProvider extends ServiceProvider
         $this->registerUserWorkerService();
         $this->registerSiteService();
 
+        $this->registerPageService();
+        $this->registerMenuService();
+
     }
 
     /**
@@ -209,6 +212,28 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton('App\Droit\Transfert\Site\Repo\SiteInterface', function()
         {
             return new \App\Droit\Transfert\Site\Repo\SiteEloquent(new \App\Droit\Transfert\Site\Entities\Site);
+        });
+    }
+
+    /**
+     * Page
+     */
+    protected function registerPageService(){
+
+        $this->app->singleton('App\Droit\Transfert\Page\Repo\PageInterface', function()
+        {
+            return new \App\Droit\Transfert\Page\Repo\PageEloquent(new \App\Droit\Transfert\Page\Entities\Page);
+        });
+    }
+
+    /**
+     * Menu
+     */
+    protected function registerMenuService(){
+
+        $this->app->singleton('App\Droit\Transfert\Menu\Repo\MenuInterface', function()
+        {
+            return new \App\Droit\Transfert\Menu\Repo\MenuEloquent(new \App\Droit\Transfert\Menu\Entities\Menu);
         });
     }
 }

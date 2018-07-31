@@ -24,6 +24,9 @@ Route::post('api/years','ContentController@years');
 Route::post('api/authors','ContentController@authors');
 Route::post('api/campagne','ContentController@campagne');
 Route::post('api/archives','ContentController@archives');
+Route::post('api/homepage','ContentController@homepage');
+Route::post('api/menu','ContentController@menu');
+Route::post('api/page','ContentController@page');
 
 Route::group(['prefix' => 'praticien'], function () {
 

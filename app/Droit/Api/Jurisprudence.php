@@ -9,6 +9,8 @@ class Jurisprudence
     protected $analyse;
     protected $categorie;
     protected $author;
+    protected $page;
+    protected $menu;
 
     public function __construct()
     {
@@ -16,6 +18,8 @@ class Jurisprudence
         $this->analyse   = \App::make('App\Droit\Transfert\Analyse\Repo\AnalyseInterface');
         $this->categorie = \App::make('App\Droit\Transfert\Categorie\Repo\CategorieInterface');
         $this->author    = \App::make('App\Droit\Transfert\Author\Repo\AuthorInterface');
+        $this->page      = \App::make('App\Droit\Transfert\Page\Repo\PageInterface');
+        $this->menu      = \App::make('App\Droit\Transfert\Menu\Repo\MenuInterface');
     }
 
     public function setConnection($connection)
@@ -149,5 +153,26 @@ class Jurisprudence
         return $model->where('status','=','envoyé')->with(['newsletter'])->whereHas('newsletter', function ($query) {
             $query->where('site_id', '=', $this->site);
         })->orderBy('send_at','DESC')->first();
+    }
+
+    public function homepage()
+    {
+        $model = $this->getModel('Page');
+
+        return $model->where('site_id','=',$this->site)->where('template','=','homepage')->first();
+    }
+
+    public function menu($position)
+    {
+        $model = $this->getModel('Menu');
+
+        return $model->where('site_id','=',$this->site)->where('position','=',$position)->first();
+    }
+
+    public function page($id)
+    {
+        $model = $this->getModel('Page');
+
+        return $model->find($id);
     }
 }

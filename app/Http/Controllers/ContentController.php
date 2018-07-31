@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\Analyse;
 use App\Http\Resources\Campagne;
+use App\Http\Resources\Page;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -15,6 +16,8 @@ use App\Http\Resources\AnneeCollection as AnneeCollection;
 use App\Http\Resources\AuthorCollection as AuthorCollection;
 use App\Http\Resources\NewsletterCollection as NewsletterCollection;
 use App\Http\Resources\Newsletter as Newsletter;
+use App\Http\Resources\Menu as Menu;
+use App\Http\Resources\Page as RessourcePage;
 use App\Http\Resources\NewsletterCampagne as NewsletterCampagne;
 
 class ContentController extends Controller
@@ -70,6 +73,33 @@ class ContentController extends Controller
         $years = $this->api->years();
 
         return response()->json(['data' => $years]);
+    }
+
+    public function homepage(Request $request)
+    {
+        $this->api->setConnection('testing_transfert')->setSite($request->input('params')['site_id']);
+
+        $page = $this->api->homepage();
+
+        return response()->json(['data' => $page]);
+    }
+
+    public function page(Request $request)
+    {
+        $this->api->setConnection('testing_transfert')->setSite($request->input('params')['site_id']);
+
+        $page = $this->api->page($request->input('params')['id']);
+
+        return new RessourcePage($page);
+    }
+
+    public function menu(Request $request)
+    {
+        $this->api->setConnection('testing_transfert')->setSite($request->input('params')['site_id']);
+
+        $menu = $this->api->menu($request->input('params')['position']);
+
+        return new Menu($menu);
     }
 
     public function authors(Request $request)
