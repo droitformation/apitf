@@ -153,30 +153,42 @@ class Transfert
         $old = $this->getOld('Newsletter_users','Newsletter');
 
         // Get all old users for newsletters
-        $subscribers = $old->get();
+        $subscribers = $old->setConnection('transfert')->get();
 
         // loop over users
         if(!$subscribers->isEmpty()){
             foreach ($subscribers as $subscriber){
 
-                $newuser = $this->makeNew('Newsletter_users','Newsletter');
-
-                //$newuser->fill(array_filter(array_only($subscriber->toArray(),['email','activation_token','activated_at'])));
-                $newuser->email = $subscriber->email;
-                $newuser->activation_token = $subscriber->activation_token;
-                $newuser->activated_at = $subscriber->activated_at && $this->valid($subscriber->activated_at->toDateTimeString()) ? $subscriber->activated_at : \Carbon\Carbon::today()->toDateTimeString();
-
-                $newuser->save();
-                $newuser = $newuser->fresh();
-
-                $ids = $subscriber->subscriptions->pluck('id')->all();
+                $user = $this->exist($subscriber);
+                $ids  = $subscriber->subscriptions->pluck('id')->all();
 
                 // attach to new model
                 if(!empty($ids)){
-                    $newuser->subscriptions()->attach($this->newsletter->id);
+                    $user->subscriptions()->attach($this->newsletter->id);
                 }
             }
         }
+    }
+
+    public function exist($subscriber)
+    {
+        $user = $this->makeNew('Newsletter_users','Newsletter');
+        $user = $user->setConnection('testing_transfert');
+
+        $exist = $user->where('email','=',$subscriber->email)->first();
+
+        if(!$exist){
+            $user->email            = $subscriber->email;
+            $user->activation_token = $subscriber->activation_token;
+            $user->activated_at     = $subscriber->activated_at && $this->valid($subscriber->activated_at->toDateTimeString()) ? $subscriber->activated_at : \Carbon\Carbon::today()->toDateTimeString();
+
+            $user->save();
+            $user = $user->fresh();
+
+            return $user;
+        }
+
+        return $exist;
     }
 
     public function valid($date)

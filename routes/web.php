@@ -82,14 +82,14 @@ Route::get('transfert', function () {
         'rca' => [
             'nom'    => 'RC Assurances',
             'url'    => 'http://rcassurances.ch',
-            'logo'   => 'rcassurances.png',
+            'logo'   => 'rcassurances.svg',
             'slug'   => 'rcassurances',
             'prefix' => 'rcassurances'
         ],
         'ddt' => [
             'nom'    => 'Droit du travail',
             'url'    => 'http://droitdutravail.ch',
-            'logo'   => 'droitdutravail.png',
+            'logo'   => 'droitdutravail.svg',
             'slug'   => 'droitdutravail',
             'prefix' => 'droitdutravail'
         ]
@@ -99,7 +99,7 @@ Route::get('transfert', function () {
     $model = $newsletter->get();
 
     $transfert = new App\Droit\Transfert\Transfert();
-    $transfert->connection = 'transfert_testing';
+    $transfert->connection = 'testing_transfert';
 
     $model = $model->first();
 
@@ -227,6 +227,11 @@ Route::get('arret', function () {
 });*/
 
 Route::get('testing', function () {
+
+    $transfert = new App\Droit\Transfert\Transfert();
+    $transfert->connection = 'testing_transfert';
+
+    return $transfert->exist('cindy.leschaud@gmail.com');exit;
 
 /*    $archive = new \App\Droit\Categorie\Entities\ArchiveCategorie();
     $all = $archive->take(50)->get();
