@@ -72,7 +72,13 @@ class Jurisprudence
             $model = $model->years($options['years']);
         }
 
-        return $model->with(['categories','analyses'])->orderBy('pub_date', 'DESC')->get();
+        $model = $model->with(['categories','analyses'])->orderBy('pub_date', 'DESC');
+
+        if(isset($options['limit']) && $options['limit'] > 0){
+            $model = $model->take($options['limit']);
+        }
+
+        return $model->get();
     }
 
     public function analyses($options = [])
