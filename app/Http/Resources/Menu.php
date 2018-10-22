@@ -17,7 +17,7 @@ class Menu extends JsonResource
         return [
             'id' => $this->id,
             'title' => $this->title,
-            'pages' => Page::collection($this->pages),
+            'pages' => Page::collection($this->pages_actives),
         ];
     }
 }

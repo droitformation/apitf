@@ -21,7 +21,7 @@ class Author extends JsonResource
             'name' =>  $this->first_name.' '.$this->last_name,
             'occupation' => $this->occupation,
             'bio' => $this->bio,
-            'photo' => asset('files/authors/'.$this->photo),
+            'photo' => asset('files/authors/'.$this->photo, env('SECURE_ASSET')),
             'analyses' => Analyse::collection($this->analyses),
             'count' => $this->analyses->count()
         ];

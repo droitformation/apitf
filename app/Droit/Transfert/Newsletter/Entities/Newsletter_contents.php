@@ -39,4 +39,13 @@ class Newsletter_contents extends Model {
         return $this->hasOne('App\Droit\Transfert\Arret\Entities\Groupe', 'id', 'groupe_id');
     }
 
+    public function product()
+    {
+        return $this->hasOne('App\Droit\Transfert\Shop\Product\Entities\Product', 'id', 'product_id');
+    }
+
+    public function colloque()
+    {
+        return $this->hasOne('App\Droit\Transfert\Colloque\Entities\Colloque', 'id', 'colloque_id');
+    }
 }

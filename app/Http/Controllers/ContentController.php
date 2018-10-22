@@ -128,8 +128,10 @@ class ContentController extends Controller
     public function archives(Request $request)
     {
         $this->api->setConnection('testing_transfert')->setSite($request->input('params')['site_id']);
+        $year = $request->input('params',null);
+        $year = isset($year['year']) ? $year['year'] : null;
 
-        $newsletters = $this->api->newsletter();
+        $newsletters = $this->api->newsletter(null,$year);
 
         return new NewsletterCollection($newsletters);
     }

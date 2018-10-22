@@ -46,7 +46,8 @@ class Arret extends Model {
     public function categories()
     {
         $database = $this->getConnection()->getDatabaseName();
-        return $this->belongsToMany('\App\Droit\Transfert\Categorie\Entities\Categorie', $database.'.arret_categories', 'arret_id', 'categories_id');
+        return $this->belongsToMany('\App\Droit\Transfert\Categorie\Entities\Categorie', $database.'.arret_categories', 'arret_id', 'categories_id')
+            ->withPivot('sorting');
     }
 
     public function analyses()

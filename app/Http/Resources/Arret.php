@@ -22,7 +22,7 @@ class Arret extends JsonResource
             'abstract'   => $this->abstract,
             'pub_text'   => $this->pub_text,
             'filter'     => $this->filter,
-            'file'       => $this->file ? asset('files/arrets/'.$this->site->slug.'/'.$this->file) : null,
+            'file'       => $this->file ? asset('files/arrets/'.$this->site->slug.'/'.$this->file, env('SECURE_ASSET')) : null,
             'dumois'     => $this->dumois,
             'categories' => Categorie::collection($this->categories),
             'analyses'   => Analyse::collection($this->analyses),

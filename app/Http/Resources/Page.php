@@ -20,7 +20,9 @@ class Page extends JsonResource
             'content' => $this->content,
             'excerpt' => $this->excerpt,
             'template' => $this->template,
+            'menu_title' => $this->menu_title,
             'slug' => $this->slug,
+            'blocs' => Bloc::collection($this->blocs),
         ];
     }
 }

@@ -11,6 +11,11 @@ class Newsletter_campagnes extends Model {
 
     protected $dates = ['deleted_at','send_at'];
 
+    public function scopeYear($query,$year)
+    {
+        if ($year) $query->whereYear('created_at', $year);
+    }
+
     public function newsletter(){
 
         return $this->belongsTo('App\Droit\Transfert\Newsletter\Entities\Newsletter', 'newsletter_id', 'id');

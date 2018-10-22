@@ -14,7 +14,7 @@ class NewsletterCollection extends ResourceCollection
      */
     public function toArray($request)
     {
-        $this->collection->transform(function ($newsletter) {
+        $this->collection->sortByDesc('send_at')->transform(function ($newsletter) {
             return (new Newsletter($newsletter));
         });
 

@@ -38,4 +38,14 @@ class Page extends Node {
     {
         return $this->belongsTo('\App\Droit\Transfert\Site\Entities\Site');
     }
+
+    public function contents()
+    {
+        return $this->hasMany('App\Droit\Transfert\Content\Entities\Content')->orderBy('rang','ASC');
+    }
+
+    public function blocs()
+    {
+        return $this->belongsToMany('App\Droit\Transfert\Bloc\Entities\Bloc','bloc_pages','page_id','bloc_id')->orderBy('blocs.rang','ASC');
+    }
 }

@@ -238,12 +238,22 @@ class Transfert
                     $table = $this->conversions[$name]['table'];
                     // Get old relation ids
 
-                    $relations = $model->$relation->pluck('id')->all();
-                    // Convert to new ids with table
-                    $ids = array_intersect_key($table, array_flip($relations));
-
-                    // attach to new model
-                    $new->$relation()->attach(array_values($ids));
+                    if($relation == 'categories'){
+                        $model->$relation->mapWithKeys(function ($item, $key) use ($table) {
+                            $sorting = $item->pivot->sorting ? $item->pivot->sorting : 0;
+                            return isset($table[$item->id]) ? [$table[$item->id] => ['sorting' => $sorting]] : [];
+                        })->map(function ($item, $key) use ($new,$relation) {
+                            // attach to new model
+                            $new->$relation()->attach($key,$item);
+                        });
+                    }
+                    else{
+                        $relations = $model->$relation->pluck('id')->all();
+                        // Convert to new ids with table
+                        $ids = array_intersect_key($table, array_flip($relations));
+                        // attach to new model
+                        $new->$relation()->attach(array_values($ids));
+                    }
                 }
             }
         }

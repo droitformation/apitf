@@ -25,6 +25,7 @@ class NewsletterCampagne extends JsonResource
                     'id' => $this->id,
                     'sujet' => $this->sujet,
                     'auteurs' => $this->auteurs,
+                    'color' => $this->newsletter->color
                 ]
             ],
         ];

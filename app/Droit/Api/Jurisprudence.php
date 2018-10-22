@@ -41,7 +41,6 @@ class Jurisprudence
     public function getNewsletter()
     {
         $sites  = \App::make('App\Droit\Transfert\Site\Repo\SiteInterface');
-
     }
 
     public function authors()
@@ -139,15 +138,18 @@ class Jurisprudence
         return $model;
     }
 
-    public function newsletter($id = null)
+    public function newsletter($id = null,$year = null)
     {
         $model = $this->getModel('Newsletter_campagnes','Newsletter');
 
         if($id){
-            return $model->find($id);
+            return $model->with(['content.arret','content.product','content.colloque','content.categorie'])->find($id);
         }
 
-        return $model->where('status','=','envoyé')->with(['newsletter'])->whereHas('newsletter', function ($query) {
+        return $model->where('status','=','envoyé')
+            ->with(['newsletter'])
+            ->year($year)
+            ->whereHas('newsletter', function ($query) {
             $query->where('site_id', '=', $this->site);
         })->orderBy('send_at','DESC')->get();
     }
@@ -156,7 +158,7 @@ class Jurisprudence
     {
         $model = $this->getModel('Newsletter_campagnes','Newsletter');
 
-        return $model->where('status','=','envoyé')->with(['newsletter'])->whereHas('newsletter', function ($query) {
+        return $model->where('status','=','envoyé')->with(['newsletter','content.arret','content.product','content.colloque','content.categorie'])->whereHas('newsletter', function ($query) {
             $query->where('site_id', '=', $this->site);
         })->orderBy('send_at','DESC')->first();
     }
@@ -165,7 +167,7 @@ class Jurisprudence
     {
         $model = $this->getModel('Page');
 
-        return $model->where('site_id','=',$this->site)->where('template','=','homepage')->first();
+        return $model->where('site_id','=',$this->site)->where('template','=','index')->with(['contents'])->first();
     }
 
     public function menu($position)

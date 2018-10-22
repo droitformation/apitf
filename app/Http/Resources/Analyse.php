@@ -25,9 +25,17 @@ class Analyse extends JsonResource
             'pub_date'  => $this->pub_date->formatLocalized('%d %B %Y'),
             'year'      => $this->pub_date->year,
             'abstract'  => $this->abstract,
-            'authors'   => $this->authors->implode('name', ', '),
+            'authors_list' => $this->authors->implode('name', ', '),
+            'authors'   => $this->authors->map(function($item, $key){
+                return [
+                    'name' =>  $item->first_name.' '.$item->last_name,
+                    'occupation' => $item->occupation,
+                    'bio' => $item->bio,
+                    'photo' => asset('files/authors/'.$item->photo, env('SECURE_ASSET')),
+                ];
+            }),
             'arrets'    => $this->arrets->pluck('the_title','reference'),
-            'file'      => $this->file ? asset('files/analyses/'.$this->site->slug.'/'.$this->file) : null,
+            'file'      => $this->file ? asset('files/analyses/'.$this->site->slug.'/'.$this->file, env('SECURE_ASSET')) : null,
         ];
     }
 }

@@ -39,6 +39,8 @@ class AppServiceProvider extends ServiceProvider
 
         $this->registerPageService();
         $this->registerMenuService();
+        $this->registerContentService();
+        $this->registerBlocService();
 
     }
 
@@ -234,6 +236,28 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton('App\Droit\Transfert\Menu\Repo\MenuInterface', function()
         {
             return new \App\Droit\Transfert\Menu\Repo\MenuEloquent(new \App\Droit\Transfert\Menu\Entities\Menu);
+        });
+    }
+
+    /**
+     * Content
+     */
+    protected function registerContentService(){
+
+        $this->app->singleton('App\Droit\Transfert\Content\Repo\ContentInterface', function()
+        {
+            return new \App\Droit\Transfert\Content\Repo\ContentEloquent(new \App\Droit\Transfert\Content\Entities\Content);
+        });
+    }
+
+    /**
+     * Bloc
+     */
+    protected function registerBlocService(){
+
+        $this->app->singleton('App\Droit\Transfert\Bloc\Repo\BlocInterface', function()
+        {
+            return new \App\Droit\Transfert\Bloc\Repo\BlocEloquent(new \App\Droit\Transfert\Bloc\Entities\Bloc);
         });
     }
 }
