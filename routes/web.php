@@ -77,7 +77,8 @@ Route::get('alert', function () {
     return new \App\Mail\AlerteDecision($user, weekRange('2018-05-31')->toArray(), $abos);
 });
 
-Route::get('transfert', function () {
+
+Route::get('transfertapi', function () {
     $site_data = [
         'rca' => [
             'nom'    => 'RC Assurances',
@@ -113,6 +114,13 @@ Route::get('arret', function () {
     $faker = \Faker\Factory::create();
 
     $jurisprudence = new App\Droit\Api\Jurisprudence();
+    $transfert = new App\Droit\Transfert\Transfert();
+
+    $exist = $transfert->existAuthor('François','Bohnet');
+
+    echo '<pre>';
+    print_r($exist);
+    echo '</pre>';exit();
 
 /*    $sites = $jurisprudence->getModel('Site')->setConnection('testing_transfert');
     $site = $sites->first();

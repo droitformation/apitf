@@ -18,5 +18,11 @@ class Author extends Model {
         $database = $this->getConnection()->getDatabaseName();
         return $this->belongsToMany('\App\Droit\Transfert\Analyse\Entities\Analyse', $database.'.analyse_authors', 'analyse_id', 'author_id');
     }
+
+    public function sites()
+    {
+        $database = $this->getConnection()->getDatabaseName();
+        return $this->belongsToMany('\App\Droit\Transfert\Site\Entities\Site', $database.'.authors_sites', 'author_id', 'site_id');
+    }
 }
 

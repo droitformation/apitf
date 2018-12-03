@@ -43,6 +43,10 @@ class FrontendController extends Controller
     {
         setEnv('DB_DATABASE_TRANSFERT', $request->input('database'));
 
+        if(env('DB_DATABASE_TRANSFERT') != $request->input('database')){
+            return redirect()->back()->withInput($request->all())->with(['message' => 'Refresh database connection']);
+        }
+
         $transfert = new \App\Droit\Transfert\Transfert();
 
         $model = $transfert->getOld('Newsletter');
@@ -53,5 +57,10 @@ class FrontendController extends Controller
         $transfert->makeSubscriptions();
 
         return redirect()->back();
+    }
+
+    public function setDatabase($slug)
+    {
+        setEnv('DB_DATABASE_TRANSFERT',$slug);
     }
 }

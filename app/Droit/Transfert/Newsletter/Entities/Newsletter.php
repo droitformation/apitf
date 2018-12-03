@@ -16,4 +16,9 @@ class Newsletter extends Model {
         $database = $this->getConnection()->getDatabaseName();
         return $this->belongsToMany('App\Droit\Transfert\Newsletter\Entities\Newsletter_users', $database.'.newsletter_subscriptions', 'newsletter_id','user_id');
     }
+
+    public function theConnection()
+    {
+        return $this->getConnection()->getDatabaseName();
+    }
 }

@@ -12,32 +12,32 @@
 
                             <div class="form-group">
                                 <label for="nom">database</label>
-                                <input type="text" class="form-control" name="database" placeholder="">
+                                <input type="text" class="form-control" name="database" value="{{ old('database') }}">
                             </div>
 
                             <div class="form-group">
                                 <label for="nom">nom</label>
-                                <input type="text" class="form-control" name="nom" placeholder="">
+                                <input type="text" class="form-control" name="nom" value="{{ old('nom') }}">
                             </div>
 
                             <div class="form-group">
                                 <label for="nom">url</label>
-                                <input type="text" class="form-control" name="url" placeholder="">
+                                <input type="text" class="form-control" name="url" value="{{ old('url') }}">
                             </div>
 
                             <div class="form-group">
                                 <label for="nom">logo</label>
-                                <input type="text" class="form-control" name="logo" placeholder="">
+                                <input type="text" class="form-control" name="logo" value="{{ old('logo') }}">
                             </div>
 
                             <div class="form-group">
                                 <label for="nom">slug</label>
-                                <input type="text" class="form-control" name="slug" placeholder="">
+                                <input type="text" class="form-control" name="slug" value="{{ old('slug') }}">
                             </div>
 
                             <div class="form-group">
                                 <label for="nom">prefix</label>
-                                <input type="text" class="form-control" id="prefix" placeholder="">
+                                <input type="text" class="form-control" name="prefix" value="{{ old('prefix') }}">
                             </div>
 
                             <button class="btn btn-info btn-sm" type="submit">OK</button>

@@ -58,7 +58,7 @@ return [
             'driver' => 'mysql',
             'host' => env('DB_HOST', 'localhost'),
             'port' => env('DB_PORT', '3306'),
-            'database' => env('DB_DATABASE_TRANSFERT', 'rca'),
+            'database' => env('DB_DATABASE_TRANSFERT', 'shop_transfertjusr'),
             'username' => env('DB_USERNAME', 'root'),
             'password' => env('DB_PASSWORD', 'root'),
             'unix_socket' => env('DB_SOCKET', ''),
@@ -85,7 +85,7 @@ return [
         'testing_transfert' => [
             'driver'    => 'mysql',
             'host'      => env('DB_TEST_HOST', 'localhost'),
-            'database'  => 'shop',
+            'database'  => 'shop_transfert',
             'username'  => env('DB_TEST_USERNAME', 'root'),
             'password'  => env('DB_TEST_PASSWORD', 'root'),
             'unix_socket' => env('DB_SOCKET', ''),

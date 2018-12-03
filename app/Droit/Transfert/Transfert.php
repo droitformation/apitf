@@ -61,7 +61,11 @@ class Transfert
     {
         $new = $this->makeNew('Newsletter');
 
-        $data = array_only($newsletter->toArray(),['titre','from_name','from_email','return_email','unsuscribe','preview','list_id','color','logos','header','soutien']);
+        $data = array_only($newsletter->toArray(),[
+            'titre','from_name','from_email','return_email','unsuscribe','preview','list_id','color','logos','header','soutien',
+            'pdf','classe','comment','comment_title','display','hide_title','second_color'
+        ]);
+
         $data['site_id'] = $this->site->id;
 
         $this->newsletter = $new->create($data);
@@ -213,18 +217,39 @@ class Transfert
 
         // Loop
         foreach ($old_models as $model){
-            $new = $this->makeNew($type['model']);
-            $new->fill(array_except($model->toArray(),$type['except']));
+
+            // exist already for authors
+            if($type['model'] == 'Author'){
+                $exist = $this->existAuthor($model->first_name,$model->last_name);
+
+                if($exist){
+                    $new = $exist;
+                    $new->sites()->attach($this->site->id);
+                }
+                else{
+                    $new = $this->makeNew($type['model']);
+                    $new->fill(array_except($model->toArray(),$type['except']));
+                }
+            }
+            else{
+                $new = $this->makeNew($type['model']);
+                $new->fill(array_except($model->toArray(),$type['except']));
+            }
 
             // Set site_id and site slug if necessary
-            $new->site_id = $this->site->id;
-
             if($type['model'] == 'Categorie'){
                 $new->image = $this->site->slug.'/'.$model->image;
                 $new->parent_id = $model->parent_id;
             }
 
-            $new->save();
+            if($type['model'] == 'Author'){
+                $new->save();
+                $new->sites()->attach($this->site->id);
+            }
+            else{
+                $new->site_id = $this->site->id;
+                $new->save();
+            }
 
             // complete conversion table
             $this->conversions[$type['model']]['table'][$model->id] = $new->id;
@@ -279,5 +304,15 @@ class Transfert
 
         $model = '\App\Droit\Transfert\\'.$parent.'\Entities\\'.$name;
         return new $model();
+    }
+
+    public function existAuthor($first_name,$last_name)
+    {
+        $author = $this->makeNew('Author');
+        $author = $author->setConnection('testing_transfert');
+
+        $exist = $author->where('first_name','=',$first_name)->where('last_name','=',$last_name)->get();
+
+        return !$exist->isEmpty() ? $exist->first() : null;
     }
 }

@@ -31,4 +31,10 @@ class Site extends Model{
     {
         return $this->hasMany('App\Droit\Transfert\Newsletter\Entities\Newsletter')->first();
     }
+
+    public function authors()
+    {
+        $database = $this->getConnection()->getDatabaseName();
+        return $this->belongsToMany('\App\Droit\Transfert\Author\Entities\Author', $database.'.authors_sites', 'site_id', 'author_id');
+    }
 }
