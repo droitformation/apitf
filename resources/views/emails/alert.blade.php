@@ -308,9 +308,9 @@
                                                                     <tbody>
                                                                     <tr align="left">
                                                                         <th height="20" width="105" style="color: #fff; font-weight: normal; background: #0f4060; border: 1px solid #fff; font-size: 11px; text-transform: uppercase; padding: 5px 4px 4px 4px;">Date décision</th>
-                                                                        <th height="20" width="275" style="color: #fff; font-weight: normal; background: #0f4060; border: 1px solid #fff; font-size: 11px; text-transform: uppercase; padding: 5px 4px 4px 4px;">Catégorie</th>
-                                                                        <th height="20" width="85" style="color: #fff; font-weight: normal; background: #0f4060; border: 1px solid #fff; font-size: 11px; text-transform: uppercase; padding: 5px 4px 4px 4px;">Référence</th>
-                                                                        <th height="20" width="115" style="color: #fff; font-weight: normal; background: #0f4060; border: 1px solid #fff; font-size: 11px; text-transform: uppercase; padding: 5px 4px 4px 4px;">Mots clés</th>
+                                                                        <th height="20" width="230" style="color: #fff; font-weight: normal; background: #0f4060; border: 1px solid #fff; font-size: 11px; text-transform: uppercase; padding: 5px 4px 4px 4px;">Catégorie</th>
+                                                                        <th height="20" width="110" style="color: #fff; font-weight: normal; background: #0f4060; border: 1px solid #fff; font-size: 11px; text-transform: uppercase; padding: 5px 4px 4px 4px;">Référence <small style="display: block; font-size: 10px;">(* destiné à publ.)</small></th>
+                                                                        <th height="20" width="125" style="color: #fff; font-weight: normal; background: #0f4060; border: 1px solid #fff; font-size: 11px; text-transform: uppercase; padding: 5px 4px 4px 4px;">Mots clés</th>
                                                                     </tr>
                                                                     <tr><td colspan="4" height="8"></td></tr>
 
@@ -326,6 +326,7 @@
                                                                                             <a target="_blank" href="http://www.droitpourlepraticien.ch/?page_id=30526&arret={{ $decisison->id }}&year={{ $decisison->publication_at->year }}">
                                                                                                 {{ $decisison->numero }}
                                                                                             </a>
+                                                                                            {{ $decisison->publish ? '*' : '' }}
                                                                                         </strong>
                                                                                     </td>
                                                                                     <td style="padding: 5px 2px;">
