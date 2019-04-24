@@ -15,19 +15,6 @@ Route::match(['get', 'post'],'/','FrontendController@index');
 Route::get('transfert','FrontendController@transfert');
 Route::post('dotransfert','FrontendController@dotransfert');
 
-//Route::post('api','ContentController@index');
-
-Route::post('api/arrets','ContentController@arrets');
-Route::post('api/analyses','ContentController@analyses');
-Route::post('api/categories','ContentController@categories');
-Route::post('api/years','ContentController@years');
-Route::post('api/authors','ContentController@authors');
-Route::post('api/campagne','ContentController@campagne');
-Route::post('api/archives','ContentController@archives');
-Route::post('api/homepage','ContentController@homepage');
-Route::post('api/menu','ContentController@menu');
-Route::post('api/page','ContentController@page');
-
 Route::group(['prefix' => 'praticien'], function () {
 
     Route::get('newsletter/{date?}','Praticien\NewsletterController@index');
@@ -50,7 +37,6 @@ Route::group(['prefix' => 'praticien'], function () {
     Route::get('decisions/{date}/{id?}','Praticien\DecisionController@index');
     Route::post('decision/update','Praticien\DecisionController@update');
 });
-
 
 Route::group(['prefix' => 'api'], function () {
     Route::post('/search','Api\MainController@search');
@@ -75,139 +61,6 @@ Route::get('alert', function () {
     $abos = $alert->getUserAbos($user);
 
     return new \App\Mail\AlerteDecision($user, weekRange('2018-05-31')->toArray(), $abos);
-});
-
-
-Route::get('transfertapi', function () {
-    $site_data = [
-        'rca' => [
-            'nom'    => 'RC Assurances',
-            'url'    => 'http://rcassurances.ch',
-            'logo'   => 'rcassurances.svg',
-            'slug'   => 'rcassurances',
-            'prefix' => 'rcassurances'
-        ],
-        'ddt' => [
-            'nom'    => 'Droit du travail',
-            'url'    => 'http://droitdutravail.ch',
-            'logo'   => 'droitdutravail.svg',
-            'slug'   => 'droitdutravail',
-            'prefix' => 'droitdutravail'
-        ]
-    ];
-
-    $newsletter = new \App\Droit\Transfert\Newsletter\Entities\Newsletter();
-    $model = $newsletter->get();
-
-    $transfert = new App\Droit\Transfert\Transfert();
-    $transfert->connection = 'testing_transfert';
-
-    $model = $model->first();
-
-    $transfert->makeSite($site_data[env('DB_DATABASE_TRANSFERT')])->prepare();
-    $transfert->makeNewsletter($model)->makeCampagne();
-    $transfert->makeSubscriptions();
-});
-
-Route::get('arret', function () {
-
-    $faker = \Faker\Factory::create();
-
-    $jurisprudence = new App\Droit\Api\Jurisprudence();
-    $transfert = new App\Droit\Transfert\Transfert();
-
-    $exist = $transfert->existAuthor('François','Bohnet');
-
-    echo '<pre>';
-    print_r($exist);
-    echo '</pre>';exit();
-
-/*    $sites = $jurisprudence->getModel('Site')->setConnection('testing_transfert');
-    $site = $sites->first();
-
-    $arrets     = $jurisprudence->setConnection('testing_transfert')->setSite($site->id)->arrets();
-    $analyses   = $jurisprudence->setConnection('testing_transfert')->setSite($site->id)->analyses();
-    $authors    = $jurisprudence->setConnection('testing_transfert')->setSite($site->id)->authors();
-
-    echo '<pre>';
-    print_r($arrets);
-    echo '</pre>';exit();*/
-
-
-    $contents = $jurisprudence->getModel('Newsletter_contents','Newsletter')->setConnection('testing_transfert');
-    $bloc = $contents->find(515);
-
-    // old => new
-    $conversion = [
-         1279 => 12,
-         1280 => 13,
-         1281 => 14,
-         1284 => 15,
-    ];
-
-    $sorted = $bloc->groupe->arrets->mapWithKeys(function ($item, $key) use ($conversion) {
-        return isset($conversion[$item->id]) ? [$conversion[$item->id] => ['sorting' => $item->pivot->sorting]] : [];
-    });
-
-    echo '<pre>';
-    print_r($sorted);
-    echo '</pre>';exit();
-    echo '<pre>';
-    print_r($bloc->groupe->arrets->pluck('id','pivot.sorting'));
-    echo '</pre>';exit();
-    /*    $model = $transfert->getOld('Analyse');
-
-        $relations = $model->first()->categories->pluck('id')->all();
-        $ids = array_intersect_key([63 => 12, 13 => 24], array_flip($relations));
-
-        echo '<pre>';
-        print_r($ids);*/
-    echo '</pre>';exit();
-
-/*    $ipverify = new \App\Droit\Uptime\IP();
-    $result = $ipverify->logs();
-    echo '<pre>';
-    print_r($result);
-    echo '</pre>';exit();*/
-
-   // $archive  = new \App\Droit\Decision\Entities\Archive();
-   // $archives = $archive->count();
-
-    //echo '<pre>';
-    //print_r($archives);
-    //echo '</pre>';exit();
-   # $tables = ['archives_2013','archives_2014','archives_2015','archives_2016','archives_2017'];
-
-   // foreach ($tables as $table){
-        // set table
-        //$archive = $archive->setTable($table);
-
-       // \DB::table($table)->delete();
-        /* $archive->chunk(200, function ($decisions) {
-
-            $newtable = new \App\Droit\Decision\Entities\Old();
-
-            foreach ($decisions as $data) {
-               $newtable->create(array(
-                    'id_nouveaute'          => $data['id_nouveaute'],
-                    'numero_nouveaute'      => $data['numero_nouveaute'],
-                    'datep_nouveaute'       => $data['datep_nouveaute'],
-                    'dated_nouveaute'       => $data['dated_nouveaute'],
-                    'categorie_nouveaute'   => $data['categorie_nouveaute'],
-                    'remarque_nouveaute'    => $data['remarque_nouveaute'],
-                    'link_nouveaute'        => $data['link_nouveaute'],
-                    'texte_nouveaute'       => $data['texte_nouveaute'],
-                    'langue_nouveaute'      => $data['langue_nouveaute'],
-                    'publication_nouveaute' => $data['publication_nouveaute'],
-                    'updated'               => $data['updated'],
-                ));
-            }
-        });*/
-
-      //  print_r($table);
-      //  echo '<br>';
-   // }
-
 });
 
 //Route::get('decision', 'ContentController@index');

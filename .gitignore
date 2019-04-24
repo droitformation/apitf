@@ -13,3 +13,4 @@ yarn-error.log
 /database/database.sqlite
 /database/bak/
 /public/files
+.DS_Store
