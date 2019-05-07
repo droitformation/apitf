@@ -31,14 +31,19 @@ class UserController extends Controller
     {
         $users      = $this->user->getAll();
         $categories = $this->categorie->getAll();
+        $date       = $request->input('date');
 
         if($request->input('user_id')){
-            $user  =  $this->user->find($request->input('user_id'));
+            $user = $this->user->find($request->input('user_id'));
 
-            $this->alert->setCadence('week')->setDate($request->input('date'));
+            if($request->input('cadence') == 'weekly'){
+                $date = weekRange($request->input('date'))->toArray();
+            }
+
+            $this->alert->setCadence($request->input('cadence'))->setDate($date);
             $data = $this->alert->getUserAbos($user);
 
-            $alert = (new \App\Mail\AlerteDecision($user, $request->input('date'), $data))->render();
+            $alert = (new \App\Mail\AlerteDecision($user, $date, $data))->render();
         }
 
         return view('praticien.users')->with([

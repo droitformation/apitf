@@ -5,4 +5,5 @@ $(function() {
         format: 'yyyy-mm-dd'
     });
 
+    $('.custom-select').select2();
 });

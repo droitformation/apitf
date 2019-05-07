@@ -2,6 +2,49 @@
 @section('content')
 
     <div class="container">
+
+        <div class="row">
+            <div class="col">
+
+                <div class="card">
+                    <div class="card-body">
+
+                        <h3>Tester abo et date</h3>
+                        <form action="{{ url('praticien/abos') }}" method="POST" class="mb-2">{!! csrf_field() !!}
+                            <div class="form-row">
+                                <div class="col">
+                                    @if(!$users->isEmpty())
+                                        <select class="custom-select" name="user_id">
+                                            @foreach($users as $user)
+                                                <option {{ $user_id == $user->id ? 'selected' : '' }} value="{{ $user->id }}">
+                                                    {{ $user->name }} - {{ $user->email }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    @endif
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control datepicker" name="date" placeholder="date">
+                                </div>
+                                <div class="col-md-2">
+                                    <select name="cadence" class="form-control">
+                                        <option value="daily">Daily</option>
+                                        <option value="weekly">Weekly</option>
+                                    </select>
+                                </div>
+                                <div class="col">
+                                    <button class="btn btn-info btn-sm" type="submit">Tester</button>
+                                </div>
+                            </div>
+                        </form>
+
+                        <div style="border: 1px solid #ccc; width: 610px;margin: 0 auto;">
+                            {!! $alert ?? '' !!}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="row">
 
             <div class="col">
@@ -22,7 +65,7 @@
                                         <tr>
                                             <td>{{ $user->email }}</td>
                                             <td>{{ $user->cadence }}</td>
-                                            <td>{{ $user->active_until->format('Y-m-d') }}</td>
+                                            <td>{{ isset($user->active_until) ? $user->active_until->format('Y-m-d') : '' }}</td>
                                             <td>
                                                 @if(!$user->abonnements->isEmpty())
                                                     @foreach($user->abonnements as $categorie_id => $abo)
@@ -39,41 +82,6 @@
                                 </tbody>
                             @endif
                         </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col">
-
-                <div class="card">
-                    <div class="card-body">
-
-                        <h3>Tester abo et date</h3>
-                        <form action="{{ url('praticien/abos') }}" method="POST" class="mb-2">{!! csrf_field() !!}
-                            <div class="form-row">
-                                <div class="col">
-                                    @if(!$users->isEmpty())
-                                        <select class="custom-select" name="user_id">
-                                            @foreach($users as $user)
-                                                <option {{ $user_id == $user->id ? 'selected' : '' }} value="{{ $user->id }}">{{ $user->name }}</option>
-                                            @endforeach
-                                        </select>
-                                    @endif
-                                </div>
-                                <div class="col-md-3">
-                                    <input type="text" class="form-control datepicker" name="date" placeholder="date">
-                                </div>
-                                <div class="col">
-                                    <button class="btn btn-info btn-sm" type="submit">Tester</button>
-                                </div>
-                            </div>
-                        </form>
-
-                        <div style="border: 1px solid #ccc; width: 610px;margin: 0 auto;">
-                            {!! $alert or '' !!}
-                        </div>
                     </div>
                 </div>
             </div>

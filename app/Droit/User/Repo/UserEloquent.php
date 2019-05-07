@@ -14,7 +14,7 @@ class UserEloquent implements UserInterface{
 
     public function getAll()
     {
-        return $this->user->all();
+        return $this->user->orderBy('name')->get();
     }
 
     public function find($id)

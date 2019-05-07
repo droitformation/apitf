@@ -46,7 +46,7 @@ class UserTest extends TestCase
         ]);
     }
 
-    public function testGetOoMakeUser()
+    public function testGetOrMakeUser()
     {
         $data = [
             'id' => '1',

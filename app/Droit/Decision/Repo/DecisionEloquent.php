@@ -157,7 +157,7 @@ class DecisionEloquent implements DecisionInterface{
     public function search($params)
     {
         $terms     = isset($params['terms']) && !empty($params['terms']) ? $params['terms'] : null;
-        $categorie = isset($params['categorie']) ? $params['categorie'] : null;
+        $categorie = isset($params['categorie']) && $params['categorie'] != 247 ? $params['categorie'] : null;
         $published = isset($params['published']) ? $params['published'] : null;
         $publication_at = isset($params['publication_at']) ? $params['publication_at'] : null;
 

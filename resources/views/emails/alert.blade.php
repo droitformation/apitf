@@ -315,27 +315,25 @@
                                                                     <tr><td colspan="4" height="8"></td></tr>
 
                                                                     @if(!$arrets->isEmpty())
-                                                                        @foreach($arrets as $arret)
-                                                                            <!--  list keys :  decisisons => collection, categorie => int,  keywords => collection  -->
-                                                                            @foreach($arret['decisions'] as $decisison)
-                                                                                <tr align="left" style="font-size: 12px;">
-                                                                                    <td style="padding: 5px 2px;">{{ $decisison->decision_at->formatLocalized('%d %B %Y') }}</td>
-                                                                                    <td style="padding: 5px 4px 5px 2px;">{{ isset($decisison->categorie) ? $decisison->categorie->name : '' }}</td>
-                                                                                    <td style="padding: 5px 2px;">
-                                                                                        <strong>
-                                                                                            <a target="_blank" href="http://www.droitpourlepraticien.ch/?page_id=30526&arret={{ $decisison->id }}&year={{ $decisison->publication_at->year }}">
-                                                                                                {{ $decisison->numero }}
-                                                                                            </a>
-                                                                                            {{ $decisison->publish ? '*' : '' }}
-                                                                                        </strong>
-                                                                                    </td>
-                                                                                    <td style="padding: 5px 2px;">
-                                                                                        @if( isset($arret['keywords']) && !empty($arret['keywords']))
-                                                                                            {{ implode(', ',$arret['keywords']) }}
-                                                                                        @endif
-                                                                                    </td>
-                                                                                </tr>
-                                                                            @endforeach
+                                                                        @foreach($arrets as $decision)
+                                                                            <!--  list keys :  decisisons => collection, categorie => int,  keywords => array  -->
+                                                                            <tr align="left" style="font-size: 12px;">
+                                                                                <td style="padding: 5px 2px;">{{ $decision['decision']->decision_at->formatLocalized('%d %B %Y') }}</td>
+                                                                                <td style="padding: 5px 4px 5px 2px;">{{ isset($decision['decision']->categorie) ? $decision['decision']->categorie->name : '' }}</td>
+                                                                                <td style="padding: 5px 2px;">
+                                                                                    <strong>
+                                                                                        <a target="_blank" href="http://www.droitpourlepraticien.ch/?page_id=30526&arret={{ $decision['decision']->id }}&year={{ $decision['decision']->publication_at->year }}">
+                                                                                            {{ $decision['decision']->numero }}
+                                                                                        </a>
+                                                                                        {{ $decision['decision']->publish ? '*' : '' }}
+                                                                                    </strong>
+                                                                                </td>
+                                                                                <td style="padding: 5px 2px;">
+                                                                                    @if( isset($decision['keywords']) && !empty($decision['keywords']))
+                                                                                        {{ $decision['keywords'] }}
+                                                                                    @endif
+                                                                                </td>
+                                                                            </tr>
                                                                         @endforeach
                                                                     @endif
 

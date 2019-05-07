@@ -55,12 +55,12 @@ Route::get('alert', function () {
 
     $repo  = \App::make('App\Droit\User\Repo\UserInterface');
     $alert = \App::make('App\Droit\Bger\Worker\AlertInterface');
-    $user  = $repo->find(1422);
+    $user  = $repo->find(71);
 
-    $alert->setCadence('weekly')->setDate(weekRange('2018-05-31')->toArray());
+    $alert->setCadence('weekly')->setDate(weekRange('2019-04-09')->toArray());
     $abos = $alert->getUserAbos($user);
 
-    return new \App\Mail\AlerteDecision($user, weekRange('2018-05-31')->toArray(), $abos);
+    return new \App\Mail\AlerteDecision($user, weekRange('2019-04-09')->toArray(), $abos);
 });
 
 //Route::get('decision', 'ContentController@index');
@@ -89,10 +89,20 @@ Route::get('alert', function () {
 
 Route::get('testing', function () {
 
-    $transfert = new App\Droit\Transfert\Transfert();
-    $transfert->connection = 'testing_transfert';
+    $string = 'LPD; protection des données';
 
-    return $transfert->exist('cindy.leschaud@gmail.com');exit;
+    $repo = App::make('App\Droit\Decision\Repo\DecisionInterface');
+
+    $decisions = $repo->search(['terms' => [$string], 'categorie' => null, 'published' => null, 'publication_at' => '2019-04-09']);
+
+    echo '<pre>';
+    print_r($decisions);
+    echo '</pre>';
+    exit();
+    //$transfert = new App\Droit\Transfert\Transfert();
+    //$transfert->connection = 'testing_transfert';
+
+    //return $transfert->exist('cindy.leschaud@gmail.com');exit;
 
 /*    $archive = new \App\Droit\Categorie\Entities\ArchiveCategorie();
     $all = $archive->take(50)->get();

@@ -54,6 +54,14 @@ $factory->define(App\Droit\Categorie\Entities\Categorie::class, function (Faker 
     ];
 });
 
+$factory->define(App\Droit\Abo\Entities\Abo::class, function (Faker $faker) {
+    return [
+        'user_id'      => 1,
+        'categorie_id' => 1,
+        'keywords'     => 'words',
+    ];
+});
+
 $factory->define(App\Droit\Transfert\Site\Entities\Site::class, function (Faker $faker) {
     return [
         'nom'    => $faker->word,

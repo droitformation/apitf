@@ -30,7 +30,7 @@ class CategorieEloquent implements CategorieInterface{
         return $this->parent->with(['categories'])->orderBy('nom')->get();
     }
 
-    public function searchByName($name)
+    public function searchByName($name, $connection = 'mysql')
     {
         // if we have a variant like "(general)" or "(en general)" test it
         $find = ' (en ';
@@ -47,7 +47,7 @@ class CategorieEloquent implements CategorieInterface{
 
         $query .= ' OR soundex(name_de)=soundex("'.$name.'") OR soundex(name_it)=soundex("'.$name.'")';
 
-        $categorie = $this->categorie->setConnection('mysql')->whereRaw($query)->get();
+        $categorie = $this->categorie->setConnection($connection)->whereRaw($query)->get();
 
         return !$categorie->isEmpty() ? $categorie->first() : null;
     }

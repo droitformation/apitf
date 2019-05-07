@@ -77,25 +77,31 @@ class Alert implements AlertInterface
             return $keywords->map(function($keyword) use ($categorie_id,$published){
                 // Find decisions for categories published or not
                 $keyword = isset($keyword) && !$keyword->isEmpty() ? array_filter($keyword->toArray()) : null;
-
                 return $this->findDecision($keyword,$categorie_id,$published);
+
             })->reject(function($item){
                 // Reject if no decisions found
-                return $item['decisions']->isEmpty();
+                return $item->isEmpty();
             });
 
-        })->reject(function($item){
-            return $item->isEmpty();
-        })->flatten(1);
+        })->flatten()->groupBy('id')->map(function ($item, $key) {
+            return [
+                'decision'  => $item->first(),
+                'categorie' => $item->first()->categorie_id,
+                'keywords'  => $item->pluck('keywords')->flatten()->implode(','),
+            ];
+        });
+
     }
 
     public function findDecision($keyword,$categorie_id,$published)
     {
-        return [
-            'decisions' => $this->decision->search(['terms' => $keyword, 'categorie' => $categorie_id, 'published' => $published, 'publication_at' => $this->publication_at]),
-            'categorie' => $categorie_id,
-            'keywords'  => $keyword
-        ];
+        $decisions = $this->decision->search(['terms' => $keyword, 'categorie' => $categorie_id, 'published' => $published, 'publication_at' => $this->publication_at]);
+
+        return $decisions->map(function ($item, $key) use ($categorie_id,$keyword) {
+            $item = $item->setAttribute( 'keywords', $keyword);
+            return $item;
+        });
     }
 
     public function sent($abo){

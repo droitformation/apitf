@@ -40,4 +40,23 @@ class CategorieWorker implements CategorieWorkerInterface
             })->flatten(1);
         });
     }
+
+    public function makeQuery($name)
+    {
+        // if we have a variant like "(general)" or "(en general)" test it
+        $find = ' (en ';
+        $pos  = strpos($name, $find);
+
+        // Select categorie where the string provided sounds the same
+        $query = 'soundex(name)=soundex("'.$name.'")';
+
+        if($pos) {
+            $without = str_replace($find, ' (', $name);
+            $query   .= ' OR soundex(name)=soundex("'.$without.'")';
+        }
+
+        $query .= ' OR soundex(name_de)=soundex("'.$name.'") OR soundex(name_it)=soundex("'.$name.'")';
+
+        return $query;
+    }
 }

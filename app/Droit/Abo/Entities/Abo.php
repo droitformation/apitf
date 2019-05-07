@@ -16,7 +16,8 @@ class Abo extends Model
     {
         $search = htmlspecialchars_decode($this->keywords);
 
-        return collect(explode(',',$search))->groupBy(function ($item, $key) {
+        $output = preg_split( "/(,|;)/", $search );
+        return collect($output)->groupBy(function ($item, $key) {
             return preg_match('/\"([^\"]*?)\"/', $item, $m) ? 'quotes' : 'noquotes';
         })->map(function ($items, $key) {
             return $items->map(function ($item, $key) {

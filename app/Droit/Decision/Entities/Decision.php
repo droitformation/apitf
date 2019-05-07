@@ -39,16 +39,17 @@ class Decision extends Model
         if($terms && !empty($terms)) {
             foreach($terms as $term) {
                 $term = addslashes($term);
+                $term = str_replace(';',' ',$term);
                 //$query->whereRaw("MATCH (texte) AGAINST ('$term')");
-
-                $query->where('texte','LIKE','%'.$term.'%');
+                $query->whereRaw('texte REGEXP  "[[:<:]]'.$term.'[[:>:]]"');
+                //$query->where('texte','LIKE','%'.$term.'%');
             }
         };
     }
 
     public function scopeCategorie($query,$categories)
     {
-        if ($categories) $query->whereHas('categorie', function ($query) use ($categories)
+        if (isset($categories) && !empty($categories)) $query->whereHas('categorie', function ($query) use ($categories)
         {
             $query->where('categorie_id', '=' ,$categories);
         });

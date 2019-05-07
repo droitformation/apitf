@@ -111,5 +111,29 @@ class AboTest extends TestCase
         ]);
     }
 
+    public function testKeywordList()
+    {
+        $user = factory(\App\Droit\User\Entities\User::class)->create([
+            'active_until' => \Carbon\Carbon::today()->startOfDay()->addMonth()->toDateTimeString(),
+            'cadence'      => 'daily',
+        ]);
 
+        $categorie = factory(\App\Droit\Categorie\Entities\Categorie::class)->create();
+
+        $abo = factory(\App\Droit\Abo\Entities\Abo::class)->create([
+            'user_id'      => $user->id,
+            'categorie_id' => $categorie->id,
+            'keywords'     => 'Lorem, ipsum dolor'
+        ]);
+
+        $this->assertEquals(collect(['Lorem','ipsum dolor']),$abo->keywords_list);
+
+        $abo1 = factory(\App\Droit\Abo\Entities\Abo::class)->create([
+            'user_id'      => $user->id,
+            'categorie_id' => $categorie->id,
+            'keywords'     => 'Lorem; ipsum dolor'
+        ]);
+
+        $this->assertEquals(collect(['Lorem','ipsum dolor']),$abo1->keywords_list);
+    }
 }
