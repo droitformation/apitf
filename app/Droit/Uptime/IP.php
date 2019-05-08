@@ -75,6 +75,10 @@ class IP
     {
         $results = $this->uptimerobot();
 
+        if(!isset($results['monitors'])){
+            return collect([]);
+        }
+
         return collect($results['monitors'])->mapWithKeys(function ($item) {
             return [$item['friendly_name'] => $item['logs']];
         });
