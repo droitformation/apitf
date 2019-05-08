@@ -40,5 +40,5 @@ return [
         'secret' => env('STRIPE_SECRET'),
     ],
 
-    'uptimerobot' => env('UPTIMEROBOT'),
+    'uptime_robot' => env('UPTIMEROBOT'),
 ];

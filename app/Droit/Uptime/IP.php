@@ -54,7 +54,7 @@ class IP
         try {
             $response = $this->client->request('POST',  $this->uptime_robot, [
                 'form_params' => [
-                    'api_key' => config('services.uptimerobot'),
+                    'api_key' => config('services.uptime_robot'),
                     'format'  => 'json',
                     'logs'    => '1',
                 ],
