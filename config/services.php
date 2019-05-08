@@ -41,4 +41,5 @@ return [
     ],
 
     'uptime_robot' => env('UPTIMEROBOT'),
+    'cymon_key' => env('CYMON_KEY'),
 ];

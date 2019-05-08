@@ -25,7 +25,7 @@ class IP
             $response = $this->client->request('GET',  $this->base_url.'ip/'.$ip, [
                 'headers' => [
                     'Content-Type'  => 'application/json',
-                    'Authorization' => 'Bearer '.env('CYMON_KEY')
+                    'Authorization' => 'Bearer '.config('services.cymon_key')
                 ]
             ]);
 
