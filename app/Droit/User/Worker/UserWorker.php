@@ -14,15 +14,15 @@ class UserWorker implements UserWorkerInterface
 
     public function find($id, $data)
     {
-        $cadence = isset($data['cadence']) ? $data['cadence'] : 'weekly';
+         $cadence = isset($data['cadence']) ? $data['cadence'] : 'weekly';
 
          return $this->user->makeOrUpdate([
-            'id'       => $id,
-            'name'     => $data['user_login'],
-            'email'    => $data['user_email'],
+            'id'           => $id,
+            'name'         => isset($data['name']) && !empty($data['name']) ? $data['name'] : $data['user_email'],
+            'email'        => $data['user_email'],
             'active_until' => isset($data['active_until']) ? $data['active_until'] : null,
-            'cadence'  => $cadence == 'all' || $cadence == 'weekly' ? 'weekly' : 'daily',
-            'password' => bcrypt($data['user_pass']),
+            'cadence'      => $cadence == 'all' || $cadence == 'daily' ? 'daily' : 'weekly',
+            'password'     => bcrypt($data['user_pass']),
         ]);
     }
 }

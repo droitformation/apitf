@@ -24,7 +24,10 @@ class UserController extends Controller
     public function show(Request $request)
     {
         $data = $request->input('data');
+
         $data['active_until'] = $request->input('active_until');
+        $data['name']         = $request->input('name');
+        $data['cadence']      = $request->input('cadence');
 
         $user = $this->worker->find($request->input('id'), $data);
 
