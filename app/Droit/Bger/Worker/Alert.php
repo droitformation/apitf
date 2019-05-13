@@ -52,19 +52,16 @@ class Alert implements AlertInterface
     public function getUsers()
     {
         // get all user
-        $abos    = $this->user->getByCadence($this->cadence);
         $already = $this->alertAlreadySent();
+        $abos    = $this->user->getByCadence($this->cadence, $already->pluck('user_id')->toArray());
 
-        return $abos->reject(function ($item, $key) use ($already){
-                // Reject already sent
-                return $already->contains('user_id', $item->id);
-            })->map(function($user){
-                // Search in new decisisions of the day or week
-                return ['user' => $user, 'abos' => $this->getUserAbos($user)];
-            })->reject(function($item){
-                // Reject if no abos
-                return $item['abos']->isEmpty();
-            });
+        return $abos->map(function($user){
+            // Search in new decisisions of the day or week
+            return ['user' => $user, 'abos' => $this->getUserAbos($user)];
+        })->reject(function($item){
+            // Reject if no decisions found
+            return $item['abos']->isEmpty();
+        });
     }
 
     public function getUserAbos($user)
@@ -72,11 +69,17 @@ class Alert implements AlertInterface
         return $user->abonnements->map(function($list,$categorie_id){
             // list keys:  keywords => collection, published => bool
             $keywords  = $list['keywords'];
-            $published = $list['published'];
+            $published = $list['published'] > 0 ? 1 : 0;
 
             return $keywords->map(function($keyword) use ($categorie_id,$published){
                 // Find decisions for categories published or not
                 $keyword = isset($keyword) && !$keyword->isEmpty() ? array_filter($keyword->toArray()) : null;
+
+                // don't search for général categorie if no keywords
+                if(!$keyword && $categorie_id == 247){
+                    return collect([]);
+                }
+
                 return $this->findDecision($keyword,$categorie_id,$published);
 
             })->reject(function($item){
@@ -91,12 +94,16 @@ class Alert implements AlertInterface
                 'keywords'  => $item->pluck('keywords')->flatten()->implode(','),
             ];
         });
-
     }
 
     public function findDecision($keyword,$categorie_id,$published)
     {
-        $decisions = $this->decision->search(['terms' => $keyword, 'categorie' => $categorie_id, 'published' => $published, 'publication_at' => $this->publication_at]);
+        $decisions = $this->decision->search([
+            'terms'     => $keyword,
+            'categorie' => $categorie_id,
+            'published' => $published,
+            'publication_at' => $this->publication_at
+        ]);
 
         return $decisions->map(function ($item, $key) use ($categorie_id,$keyword) {
             $item = $item->setAttribute( 'keywords', $keyword);

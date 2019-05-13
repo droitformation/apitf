@@ -41,23 +41,24 @@ class Decision extends Model
                 $term = addslashes($term);
                 $term = str_replace(';',' ',$term);
                 //$query->whereRaw("MATCH (texte) AGAINST ('$term')");
-                $query->whereRaw('texte REGEXP  "[[:<:]]'.$term.'[[:>:]]"');
-                //$query->where('texte','LIKE','%'.$term.'%');
+                //$query->whereRaw('texte REGEXP  "[[:<:]]'.$term.'[[:>:]]"');
+                $query->where('texte','LIKE','% '.$term.' %');
             }
         };
     }
 
     public function scopeCategorie($query,$categories)
     {
-        if (isset($categories) && !empty($categories)) $query->whereHas('categorie', function ($query) use ($categories)
-        {
+        if (isset($categories) && !empty($categories)) $query->whereHas('categorie', function ($query) use ($categories) {
             $query->where('categorie_id', '=' ,$categories);
         });
     }
 
     public function scopePublished($query, $publish)
     {
-        if($publish) $query->where('publish', '=' ,1);
+        if($publish && $publish > 0){
+            $query->where('publish', '=' ,1);
+        }
     }
 
     public function scopePublicationAt($query, $publication_at)

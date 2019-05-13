@@ -22,11 +22,12 @@ class UserEloquent implements UserInterface{
         return $this->user->with(['abos','published'])->find($id);
     }
 
-    public function getByCadence($cadence)
+    public function getByCadence($cadence, $exclude = [])
     {
-        return $this->user->with(['abos','published'])
+        return $this->user->has('abos')->with(['abos','published'])
             ->where('cadence','=',$cadence)
             ->whereDate('active_until', '>', \Carbon\Carbon::today()->startOfDay())
+            ->exclude($exclude)
             ->get();
     }
     
