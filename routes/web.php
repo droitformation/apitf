@@ -64,11 +64,9 @@ Route::get('alert', function () {
     $abos = $alert->getUserAbos($user);
 
     echo '<pre>';
-    print_r($abos);
+    print_r($abos->pluck('decision')->toArray());
     echo '</pre>';
     exit();
-
-
 
     return new \App\Mail\AlerteDecision($user, weekRange('2019-05-10')->toArray(), $abos);
 });
@@ -84,7 +82,7 @@ Route::get('handlealert', function () {
     }
 
     echo '<pre>';
-    print_r($abos);
+   // print_r($abos);
     echo '</pre>';exit;
 
     return view('test');

@@ -75,10 +75,10 @@ function weekRange($start = null){
 
     $dates = [];
 
-    $end_date = $start ? \Carbon\Carbon::parse($start) : \Carbon\Carbon::today();
+    $end_date = $start ? \Carbon\Carbon::parse($start)->endOfWeek() : \Carbon\Carbon::today()->endOfWeek();
     $end      = $end_date;
 
-    $start_date = $start ? \Carbon\Carbon::parse($start)->subDays(9) : \Carbon\Carbon::today()->subDays(9);
+    $start_date = $start ? \Carbon\Carbon::parse($start)->startOfWeek() : \Carbon\Carbon::today()->startOfWeek();
 
     for($date = $start_date; $date->lte($end); $date->addDay()) {
         if($date->isWeekday()){

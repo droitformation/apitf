@@ -41,8 +41,22 @@ class Decision extends Model
                 $term = addslashes($term);
                 $term = str_replace(';',' ',$term);
                 //$query->whereRaw("MATCH (texte) AGAINST ('$term')");
-                //$query->whereRaw('texte REGEXP  "[[:<:]]'.$term.'[[:>:]]"');
-                $query->where('texte','LIKE','% '.$term.' %');
+                $query->where(function ($q) use ($term) {
+                    $q->where('texte','LIKE','% '.$term.' %')
+                        ->orWhere('texte','LIKE','%'.$term.' %')
+                        ->orWhere('texte','LIKE','% '.$term.'%');
+                });
+            }
+        };
+    }
+
+    public function scopeSearchxp($query,$terms)
+    {
+        if($terms && !empty($terms)) {
+            foreach($terms as $term) {
+                $term = addslashes($term);
+                $term = str_replace(';',' ',$term);
+                $query->whereRaw('texte REGEXP  "[[:<:]]'.$term.'[[:>:]]"');
             }
         };
     }

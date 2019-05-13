@@ -50,6 +50,7 @@ class UserTest extends TestCase
     {
         $data = [
             'id' => '1',
+            'name' => 'cleschaud',
             'data' => [
                 'ID' => '1',
                 'user_login'    => 'cleschaud',

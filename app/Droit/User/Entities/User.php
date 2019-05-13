@@ -64,7 +64,7 @@ class User extends Authenticatable
     public function scopeExclude($query, $exclude)
     {
         if($exclude && !empty($exclude)){
-            $query->whereNotIn('user_id', $exclude);
+            $query->whereNotIn('id', $exclude);
         }
     }
 

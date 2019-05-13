@@ -160,10 +160,11 @@ class DecisionEloquent implements DecisionInterface{
         $categorie = isset($params['categorie']) && $params['categorie'] != 247 ? $params['categorie'] : null;
         $published = isset($params['published']) ? $params['published'] : null;
         $publication_at = isset($params['publication_at']) ? $params['publication_at'] : null;
+        $search         = isset($params['xp']) ? 'searchxp' : 'search';
 
         return $this->decision->select('id','numero','categorie_id','remarque','publication_at','decision_at','langue','publish')
             ->with(['categorie'])
-            ->search($terms)
+            ->$search($terms)
             ->categorie($categorie)
             ->published($published)
             ->publicationAt($publication_at)

@@ -36,9 +36,10 @@ class CategorieWorker implements CategorieWorkerInterface
             return $keyword->pluck('keywords_list')->toArray();
         })->map(function ($keywords, $categorie_id) use ($publications_at) {
             return collect($keywords)->map(function ($keyword) use ($publications_at){
-                return $this->decision->search(['terms' => $keyword, 'publications_at' => $publications_at]);
+                return $this->decision->search(['terms' => $keyword, 'publications_at' => $publications_at, 'xp' => true]);
             })->flatten(1);
         });
+
     }
 
     public function makeQuery($name)

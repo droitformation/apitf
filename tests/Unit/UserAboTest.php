@@ -30,6 +30,11 @@ class UserAboTest extends TestCase
             'cadence'      => 'daily',
         ]);
 
+        $abo1 = factory(\App\Droit\Abo\Entities\Abo::class)->create([
+            'user_id'  => $user->id,
+            'keywords' => '"Assurance de Protection Juridique SA"',
+        ]);
+
         $users = $repo->getByCadence('daily');
 
         $this->assertEquals(1,$users->count());
@@ -42,6 +47,11 @@ class UserAboTest extends TestCase
         $user = factory(\App\Droit\User\Entities\User::class)->create([
             'active_until' => \Carbon\Carbon::today()->startOfDay()->addMonth()->toDateTimeString(),
             'cadence'      => 'weekly',
+        ]);
+
+        $abo1 = factory(\App\Droit\Abo\Entities\Abo::class)->create([
+            'user_id'  => $user->id,
+            'keywords' => '"Assurance de Protection Juridique SA"',
         ]);
 
         $users = $repo->getByCadence('daily');

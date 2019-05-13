@@ -42,6 +42,28 @@ class HelperTest extends TestCase
         $this->assertEquals($expected,$result);
     }
 
+    public function testWeekRange()
+    {
+        $start_date = \Carbon\Carbon::createFromDate(2017, 8, 7)->startOfDay();
+        $end_date   = \Carbon\Carbon::createFromDate(2017, 8, 11)->startOfDay();
+
+        $expected = [
+            \Carbon\Carbon::createFromDate(2017, 8, 7)->startOfDay()->toDateTimeString(),
+            \Carbon\Carbon::createFromDate(2017, 8, 8)->startOfDay()->toDateTimeString(),
+            \Carbon\Carbon::createFromDate(2017, 8, 9)->startOfDay()->toDateTimeString(),
+            \Carbon\Carbon::createFromDate(2017, 8, 10)->startOfDay()->toDateTimeString(),
+            \Carbon\Carbon::createFromDate(2017, 8, 11)->startOfDay()->toDateTimeString(),
+        ];
+
+        $result = weekRange();
+
+        $this->assertEquals(5,count($result));
+
+        $result = weekRange($start_date);
+
+        $this->assertEquals(collect($expected),$result);
+    }
+
     public function testYearsRangeForArchivesSearch()
     {
         $expected = [2013,2014];
