@@ -46,7 +46,10 @@ class Alert implements AlertInterface
      */
     public function getDate()
     {
-        return !is_array($this->publication_at) ? $this->publication_at : array_pop($this->publication_at);
+        // copy date else the last one is deleted
+        $date = $this->publication_at;
+
+        return !is_array($date) ? $date : array_pop($date);
     }
 
     public function getUsers()

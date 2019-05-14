@@ -78,7 +78,6 @@ class Decision extends Model
     public function scopePublicationAt($query, $publication_at)
     {
         if($publication_at) {
-
             $publication_at = is_array($publication_at) ? $publication_at : [$publication_at];
 
             $query->where(function ($q) use ($publication_at) {

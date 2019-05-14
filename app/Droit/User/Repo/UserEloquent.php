@@ -33,8 +33,6 @@ class UserEloquent implements UserInterface{
     
     public function create(array $data)
     {
-        \Log::info(json_encode($data));
-
         $user = $this->user->create(array(
             'id'           => $data['id'],
             'name'         => $data['name'],

@@ -39,7 +39,6 @@ class SendEmailAlert implements ShouldQueue
         $alert->setCadence($this->cadence)->setDate($this->publication_at);
 
         $users = $alert->getUsers();
-        //return  $alert->getUsers();
 
         // No alerts today
         if($users->isEmpty()){
@@ -50,8 +49,9 @@ class SendEmailAlert implements ShouldQueue
         foreach ($users as $user)
         {
             //\Mail::to($user['user']->email)->send(new \App\Mail\AlerteDecision($user['user'], $this->publication_at, $user['abos']));
+            // Testing
             \Mail::to('cindy.leschaud@gmail.com')->send(new \App\Mail\AlerteDecision($user['user'], $this->publication_at, $user['abos']));
-           // $alert->sent($user['user']);// Mark as sent
+            $alert->sent($user['user']);// Mark as sent
         }
 
         \Mail::to('cindy.leschaud@gmail.com')->send(new \App\Mail\SuccessNotification('Envoi des alertes commencé'));

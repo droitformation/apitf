@@ -55,7 +55,7 @@ Route::get('alert', function () {
 
     $repo  = \App::make('App\Droit\User\Repo\UserInterface');
     $alert = \App::make('App\Droit\Bger\Worker\AlertInterface');
-    $user  = $repo->find(1117);
+    $user  = $repo->find(155);
 
     $repo = App::make('App\Droit\Decision\Repo\DecisionInterface');
     $decisions = $repo->search(['terms' => null, 'categorie' => 226, 'published' => 1, 'publication_at' => '2019-05-10']);
@@ -63,10 +63,6 @@ Route::get('alert', function () {
     $alert->setCadence('weekly')->setDate(weekRange('2019-05-10')->toArray());
     $abos = $alert->getUserAbos($user);
 
-    echo '<pre>';
-    print_r($abos->pluck('decision')->toArray());
-    echo '</pre>';
-    exit();
 
     return new \App\Mail\AlerteDecision($user, weekRange('2019-05-10')->toArray(), $abos);
 });
@@ -74,16 +70,11 @@ Route::get('alert', function () {
 Route::get('handlealert', function () {
 
     $alert = new \App\Jobs\SendEmailAlert(weekRange('2019-05-10')->toArray(), 'weekly');
-
-    $abos = $alert->handle();
+    $abos  = $alert->handle();
 
     foreach ($abos as $abo){
         echo (new \App\Mail\AlerteDecision($abo['user'], weekRange('2019-05-10')->toArray(), $abo['abos']))->render();
     }
-
-    echo '<pre>';
-   // print_r($abos);
-    echo '</pre>';exit;
 
     return view('test');
 
