@@ -53,9 +53,7 @@ class SendEmailAlert implements ShouldQueue
             \Mail::to('cindy.leschaud@gmail.com')->bcc('archive@droitpourlepraticien.ch')->send(new \App\Mail\AlerteDecision($user['user'], $this->publication_at, $user['abos']));
             $alert->sent($user['user']);// Mark as sent
 
-            if(config('mail.host', false) == 'smtp.mailtrap.io'){
-                sleep(1); //use usleep(500000) for half a second or less
-            }
+            sleep(2); //use usleep(500000) for half a second or less
         }
 
         \Mail::to('cindy.leschaud@gmail.com')->send(new \App\Mail\SuccessNotification('Envoi des alertes commencé'));
