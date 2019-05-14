@@ -42,20 +42,18 @@ class SendEmailAlert implements ShouldQueue
 
         // No alerts today
         if($users->isEmpty()){
+            \Log::info('what '.json_encode($users));
             \Mail::to('cindy.leschaud@gmail.com')->send(new \App\Mail\SuccessNotification('Aucune alertes'));
         }
 
-        // Loop all users and send the alerts
-        foreach ($users as $user)
-        {
-            //\Mail::to($user['user']->email)->send(new \App\Mail\AlerteDecision($user['user'], $this->publication_at, $user['abos']));
-            // Testing
-            \Mail::to('cindy.leschaud@gmail.com')->send(new \App\Mail\AlerteDecision($user['user'], $this->publication_at, $user['abos']));
-            $alert->sent($user['user']);// Mark as sent
+        \Mail::to('cindy.leschaud@gmail.com')->send(new \App\Mail\SuccessNotification('Envoi des alertes commencé'));
 
-            sleep(2); //use usleep(500000) for half a second or less
+        // Loop all users and send the alerts
+        foreach ($users as $user) {
+            //\Mail::to($user['user']->email)->send(new \App\Mail\AlerteDecision($user['user'], $this->publication_at, $user['abos']));
+            \Mail::to('cindy.leschaud@gmail.com')->send(new \App\Mail\AlerteDecision($user['user'], $this->publication_at, $user['abos'])); // Testing
+            $alert->sent($user['user']);// Mark as sent
         }
 
-        \Mail::to('cindy.leschaud@gmail.com')->send(new \App\Mail\SuccessNotification('Envoi des alertes commencé'));
     }
 }
