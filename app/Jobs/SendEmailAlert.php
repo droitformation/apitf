@@ -50,7 +50,7 @@ class SendEmailAlert implements ShouldQueue
         {
             //\Mail::to($user['user']->email)->send(new \App\Mail\AlerteDecision($user['user'], $this->publication_at, $user['abos']));
             // Testing
-            \Mail::to('cindy.leschaud@gmail.com')->bcc('archive@droitpourlepraticien.ch')->send(new \App\Mail\AlerteDecision($user['user'], $this->publication_at, $user['abos']));
+            \Mail::to('cindy.leschaud@gmail.com')->send(new \App\Mail\AlerteDecision($user['user'], $this->publication_at, $user['abos']));
             $alert->sent($user['user']);// Mark as sent
 
             sleep(2); //use usleep(500000) for half a second or less
