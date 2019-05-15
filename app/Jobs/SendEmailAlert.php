@@ -48,9 +48,11 @@ class SendEmailAlert implements ShouldQueue
         \Mail::to('cindy.leschaud@gmail.com')
             ->send(new \App\Mail\SuccessNotification('Envoi des alertes commencé'));
 
+        $i = 1;
         // Loop all users and send the alerts
         foreach ($users as $user) {
-            $when = now()->addSeconds(2);
+            $i++;
+            $when = now()->addSeconds($i);
             //\Mail::to($user['user']->email)->send(new \App\Mail\AlerteDecision($user['user'], $this->publication_at, $user['abos']));
             \Mail::to('cindy.leschaud@gmail.com')->later($when, new \App\Mail\AlerteDecision($user['user'], $this->publication_at, $user['abos'])); // Testing
 
