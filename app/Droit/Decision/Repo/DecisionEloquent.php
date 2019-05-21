@@ -103,7 +103,7 @@ class DecisionEloquent implements DecisionInterface{
 
     public function getWeekPublished(array $dates){
 
-        return $this->decision->whereIn('publication_at', $dates)->published(true)->get();
+        return $this->decision->whereIn('publication_at', $dates)->published(1)->get();
     }
 
     public function getDates(array $dates)

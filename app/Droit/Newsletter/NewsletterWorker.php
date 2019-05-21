@@ -71,8 +71,11 @@ class NewsletterWorker
         $html = $this->html();
 
         $this->mailjet->setHtml($html,$ID);
-        $this->mailjet->sendTest($ID,'cindy.leschaud@gmail.com','Newsletter Droit pour le Praticien | Semaine du 4 janvier au 15 janvier 2018');
-        $this->mailjet->sendCampagne($ID);
+       // $this->mailjet->sendTest($ID,'cindy.leschaud@gmail.com','Newsletter Droit pour le Praticien | Semaine du 4 test au 15 test 2018');
+
+        $toSend = \Carbon\Carbon::now()->addMinutes(5);
+
+        $this->mailjet->sendCampagne($ID, $toSend->toIso8601String());
     }
 
     public function send_test()

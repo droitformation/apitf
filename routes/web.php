@@ -55,16 +55,15 @@ Route::get('alert', function () {
 
     $repo  = \App::make('App\Droit\User\Repo\UserInterface');
     $alert = \App::make('App\Droit\Bger\Worker\AlertInterface');
-    $user  = $repo->find(155);
+    $user  = $repo->find(2744);
 
     $repo = App::make('App\Droit\Decision\Repo\DecisionInterface');
     $decisions = $repo->search(['terms' => null, 'categorie' => 226, 'published' => 1, 'publication_at' => '2019-05-10']);
 
-    $alert->setCadence('weekly')->setDate(weekRange('2019-05-10')->toArray());
+    $alert->setCadence('daily')->setDate(weekRange('2019-05-16')->toArray());
     $abos = $alert->getUserAbos($user);
 
-
-    return new \App\Mail\AlerteDecision($user, weekRange('2019-05-10')->toArray(), $abos);
+    return new \App\Mail\AlerteDecision($user, weekRange('2019-05-16')->toArray(), $abos);
 });
 
 Route::get('handlealert', function () {

@@ -11,7 +11,7 @@ class SendNewsletter extends Command
      *
      * @var string
      */
-    protected $signature = 'send:newsletter {date?}';
+    protected $signature = 'send:newsletter {test?} {date?}';
 
     /**
      * The console command description.
@@ -42,10 +42,17 @@ class SendNewsletter extends Command
 
         $date = $this->argument('date');
 
-        if($date){
+        if(isset($date)){
             $url = $url.'/'.$date;
         }
 
-        $worker->setUrl($url)->send_test();
+        $test = $this->argument('test');
+
+        if(isset($test)){
+            $worker->setUrl($url)->send_test();
+        }
+        else{
+            $worker->setUrl($url)->send();
+        }
     }
 }
