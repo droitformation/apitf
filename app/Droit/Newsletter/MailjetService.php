@@ -183,14 +183,14 @@ class MailjetService {
             return false;
     }
 
-    public function createCampagne(){
+    public function createCampagne($Subject = 'Newsletter Droit pour le Praticien'){
 
         $this->hasList();
         
         # Parameters
         $params = [
             'Title'          => 'Newsletter Droit pour le Praticien',
-            'Subject'        => 'Newsletter Droit pour le Praticien | Semaine du 4 janvier au 15 janvier 2018',
+            'Subject'        => $Subject,
             'ContactsListID' => $this->list,
             'Locale'         => 'fr',
             'Callback'       => url('/'),

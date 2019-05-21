@@ -16,6 +16,7 @@ class NewsletterWorker
     protected $mailjet;
     protected $main_list = '1793991';
     protected $url = null;
+    protected $date;
 
     public function __construct()
     {
@@ -32,6 +33,26 @@ class NewsletterWorker
         $this->url = $url;
 
         return $this;
+    }
+
+    public function setDate($date)
+    {
+        $this->date = $date;
+
+        return $this;
+    }
+
+    public function getSubject()
+    {
+        setlocale(LC_ALL, 'fr_FR.UTF-8');
+
+        $date  = $this->date ? \Carbon\Carbon::parse($this->date) : \Carbon\Carbon::now();
+
+        $dates = weekRange($date->toDateString());
+        $start = $dates->first();
+        $end   = $dates->last();
+
+        return 'Newsletter Droit pour le Praticien | '.\Carbon\Carbon::parse($start)->formatLocalized("%d %B %Y").' au '.\Carbon\Carbon::parse($end)->formatLocalized("%d %B %Y");
     }
 
     /**
@@ -67,13 +88,13 @@ class NewsletterWorker
     {
         $this->mailjet->setList($this->main_list);
 
-        $ID   = $this->mailjet->createCampagne();
+        $ID   = $this->mailjet->createCampagne($this->getSubject());
         $html = $this->html();
 
         $this->mailjet->setHtml($html,$ID);
        // $this->mailjet->sendTest($ID,'cindy.leschaud@gmail.com','Newsletter Droit pour le Praticien | Semaine du 4 test au 15 test 2018');
 
-        $toSend = \Carbon\Carbon::now()->addMinutes(5);
+        $toSend = \Carbon\Carbon::now()->addMinutes(20);
 
         $this->mailjet->sendCampagne($ID, $toSend->toIso8601String());
     }
@@ -83,7 +104,7 @@ class NewsletterWorker
         $html = $this->html();
 
         \Mail::send([], [], function ($message) use ($html) {
-            $message->to('cindy.leschaud@gmail.com')->subject('Newsletter Droit pour le Praticien | TEST')->setBody($html, 'text/html');
+            $message->to('cindy.leschaud@gmail.com')->subject($this->getSubject())->setBody($html, 'text/html');
         });
     }
 }

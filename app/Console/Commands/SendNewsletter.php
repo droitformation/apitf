@@ -42,17 +42,18 @@ class SendNewsletter extends Command
 
         $date = $this->argument('date');
 
-        if(isset($date)){
-            $url = $url.'/'.$date;
-        }
+        $url = $date ? $url.'/'.$date : $url;
 
         $test = $this->argument('test');
 
         if(isset($test)){
-            $worker->setUrl($url)->send_test();
+             $worker->setUrl($url)->send_test();
         }
         else{
-            $worker->setUrl($url)->send();
+            $date = $date ? $date : null;
+            $result = $worker->setUrl($url)->setDate($date)->send();
+
+            \Log::info(json_encode($result));
         }
     }
 }
