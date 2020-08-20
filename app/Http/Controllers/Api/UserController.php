@@ -23,16 +23,19 @@ class UserController extends Controller
 
     public function show(Request $request)
     {
-        $data = $request->input('data');
+        $data = $request->input('data',null);
 
-        $data['active_until'] = $request->input('active_until');
-        $data['name']         = $request->input('name');
-        $data['cadence']      = $request->input('cadence');
+        if($data){
+            $data['active_until'] = $request->input('active_until');
+            $data['name']         = $request->input('name');
+            $data['cadence']      = $request->input('cadence');
+        }
 
         $user = $this->worker->find($request->input('id'), $data);
 
         $data = [
             'id'          => $user->id,
+            'name'        => $user->name,
             'cadence'     => $user->cadence,
             'abonnements' => $user->abos_api
         ];

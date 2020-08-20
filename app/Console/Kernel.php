@@ -26,12 +26,10 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-
         $schedule->command('update:arret')->daily()->at('13:45');
         $schedule->command('send:alert daily')->daily()->at('14:00');
         $schedule->command('send:alert weekly')->weekly()->fridays()->at('14:00');
-        $schedule->command('send:newsletter')->daily()->at('14:00');
-
+        $schedule->command('send:newsletter')->mondays()->at('14:00');
     }
 
     /**
