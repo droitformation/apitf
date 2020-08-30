@@ -8,7 +8,6 @@
         "php": ">=7.0.0",
         "barryvdh/laravel-debugbar": "^3.2",
         "baum/baum": "^1.1",
-        "fabpot/goutte": "^3.2",
         "fideloper/proxy": "~4.0",
         "guzzlehttp/guzzle": "^6.3",
         "inlinestyle/inlinestyle": "^1.2",
@@ -17,6 +16,7 @@
         "mailgun/mailgun-php": "^2.4",
         "mailjet/mailjet-apiv3-php": "^1.2",
         "neitanod/forceutf8": "^2.0",
+        "fabpot/goutte": "^3.2",
         "php-http/guzzle6-adapter": "^1.1"
     },
     "require-dev": {

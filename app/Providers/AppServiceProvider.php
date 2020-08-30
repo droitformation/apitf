@@ -18,7 +18,8 @@ class AppServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register any application services.
+     * Register any application services.git log
+     *
      *
      * @return void
      */
@@ -35,8 +36,8 @@ class AppServiceProvider extends ServiceProvider
         $this->registerAlertWorkerService();
         $this->registerAboWorkerService();
         $this->registerUserWorkerService();
-        $this->registerSiteService();
 
+        $this->registerSiteService();
         $this->registerPageService();
         $this->registerMenuService();
         $this->registerContentService();
